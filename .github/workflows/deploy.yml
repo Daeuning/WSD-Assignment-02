@@ -1,0 +1,31 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # main 브랜치에 푸시될 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20" # 프로젝트에 맞는 Node.js 버전 사용
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build # 빌드 명령어 (React, Vue, Angular 등 프로젝트에 따라 변경)
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build # 빌드 출력 디렉토리 (React: build, Vue: dist)
