@@ -27,5 +27,5 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.WORKFLOW_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build # 빌드 출력 디렉토리 (React: build, Vue: dist)
