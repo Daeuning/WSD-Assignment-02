@@ -1,14 +1,17 @@
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Main from '../src/pages/Main.jsx';
 import SignIn from '../src/pages/SignIn.jsx';
 import Popular from '../src/pages/Popular.jsx';
 import Search from '../src/pages/Search.jsx';
 import WishList from '../src/pages/WishList.jsx';
+import NavBar from '../src/layout/NavBar.jsx';
 import './App.css';
 
 function App() {
   return (
     <>
+    <NavBar />
       <Routes>
         {/* 메인 페이지 */}
         <Route path="/" element={<Main />} />
