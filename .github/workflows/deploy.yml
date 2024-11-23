@@ -19,6 +19,7 @@ jobs:
           node-version: "20" # 프로젝트에 맞는 Node.js 버전 사용
 
       - name: Install dependencies
+        working-directory: ./netflix
         run: npm install
 
       - name: Build project
