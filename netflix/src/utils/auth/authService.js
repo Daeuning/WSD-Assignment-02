@@ -19,7 +19,7 @@ export default class AuthService {
         }
         resolve(user); // 로그인 성공
       } else {
-        reject('Login failed'); // 로그인 실패
+        reject('로그인에 실패하였습니다'); // 로그인 실패
       }
     });
   }

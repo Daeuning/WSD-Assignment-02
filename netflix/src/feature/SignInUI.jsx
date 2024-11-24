@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { showToast } from "../utils/toast/customToast.js"; // Toast 메시지 유틸리티 함수
+import { showToast } from "../utils/toast/customToast"; // Toast 메시지 유틸리티 함수
 import { handleRegister } from "../utils/auth/handleRegister"; // 회원가입 처리 함수
+import { handleLogin } from "../utils/auth/handleLogin"; // 로그인 처리 함수
 import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로
 
 const Container = styled.div`
@@ -36,7 +38,7 @@ const Welcome = styled.div`
 const FormBox = styled.div`
   position: absolute;
   top: -10%;
-  left: ${({ isSignUp }) => (isSignUp ? '45%' : '5%')};
+  left: ${({ isSignUp }) => (isSignUp ? "45%" : "5%")};
   background: var(--white-04dp);
   backdrop-filter: blur(15px) brightness(0.8);
   border: 1px solid var(--white-01dp);
@@ -55,7 +57,7 @@ const FormContainer = styled.div`
   top: 0;
   left: 0;
   opacity: ${({ isHidden }) => (isHidden ? 0 : 1)};
-  visibility: ${({ isHidden }) => (isHidden ? 'hidden' : 'visible')};
+  visibility: ${({ isHidden }) => (isHidden ? "hidden" : "visible")};
   transition: opacity 0.5s ease, visibility 0.5s ease;
   display: flex;
   flex-direction: column;
@@ -82,14 +84,14 @@ const LeftBox = styled.div`
   text-align: center;
   transition: opacity 0.5s ease, visibility 0.5s ease;
   opacity: ${({ isSignUp }) => (isSignUp ? 1 : 0)};
-  visibility: ${({ isSignUp }) => (isSignUp ? 'visible' : 'hidden')};
+  visibility: ${({ isSignUp }) => (isSignUp ? "visible" : "hidden")};
 `;
 
 const RightBox = styled(LeftBox)`
   left: auto;
   right: 0;
   opacity: ${({ isSignUp }) => (isSignUp ? 0 : 1)};
-  visibility: ${({ isSignUp }) => (isSignUp ? 'hidden' : 'visible')};
+  visibility: ${({ isSignUp }) => (isSignUp ? "hidden" : "visible")};
 `;
 
 const Title = styled.h2`
@@ -174,6 +176,7 @@ const CheckboxContainer = styled.div`
 `;
 
 const SignInUI = () => {
+  const navigate = useNavigate();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -189,11 +192,23 @@ const SignInUI = () => {
     e.preventDefault();
     try {
       const message = await handleRegister(email, password, confirmPassword);
-      showToast("success", message); // 성공 메시지
+      showToast("success", message);
       clearFields();
-      setIsSignUp(false); // 로그인 화면으로 전환
+      setIsSignUp(false);
     } catch (err) {
-      showToast("error", err.message); // 에러 메시지
+      showToast("error", err.message);
+    }
+  };
+
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const message = await handleLogin(email, password);
+      showToast("success", message);
+      clearFields();
+      navigate("/"); // 로그인 성공 시 메인 페이지로 라우팅
+    } catch (err) {
+      showToast("error", err.message);
     }
   };
 
@@ -227,9 +242,19 @@ const SignInUI = () => {
           </FormContainer>
           <FormContainer isHidden={isSignUp}>
             <FormTitle>sign in</FormTitle>
-            <form autoComplete="off">
-              <Input type="text" placeholder="email" />
-              <Input type="password" placeholder="password" />
+            <form autoComplete="off" onSubmit={handleLoginSubmit}>
+              <Input
+                type="text"
+                placeholder="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <Input
+                type="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
               <CheckboxContainer>
                 <input type="checkbox" id="remember" />
                 <label htmlFor="remember">remember me</label>
