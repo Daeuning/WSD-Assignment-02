@@ -55,7 +55,8 @@ export default class AuthService {
    * TMDB API 키와 관련 데이터를 Local Storage에서 제거
    */
   logout() {
-    localStorage.removeItem('TMDb-Key');
-    console.log('로그아웃 완료');
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("isLoggedIn");
+    console.log("로그아웃 완료!");
   }
 }

@@ -5,6 +5,8 @@ import { showToast } from "../utils/toast/customToast";
 import { handleRegister } from "../utils/auth/handleRegister";
 import { handleLogin } from "../utils/auth/handleLogin";
 import MovieImage from "../assets/img/movie.jpg";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/authSlice.js";
 
 const Container = styled.div`
   margin: auto;
@@ -173,8 +175,8 @@ const CheckboxContainer = styled.div`
 
   input[type="checkbox"] {
     appearance: none; /* 기본 체크박스 스타일 제거 */
-    width: 16px; /* 크기 조정 */
-    height: 16px; /* 크기 조정 */
+    width: 16px;
+    height: 16px;
     margin-right: 8px;
     border: 2px solid var(--white-02dp);
     border-radius: 4px;
@@ -190,20 +192,20 @@ const CheckboxContainer = styled.div`
     }
 
     &:checked::after {
-      content: '✔'; /* 체크 아이콘 표시 */
+      content: '✔';
       position: absolute;
-      top: 50%; /* 정중앙에 위치 */
-      left: 50%; /* 정중앙에 위치 */
-      transform: translate(-50%, -50%); /* 중앙 정렬 */
-      font-size: 10px; /* 아이콘 크기 조정 */
-      color: var(--basic-font); /* 아이콘 색상 */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      color: var(--basic-font);
     }
   }
 `;
 
-
 const SignInUI = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -236,10 +238,11 @@ const SignInUI = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const message = await handleLogin(email, password);
-      showToast("success", message);
+      await handleLogin(email, password); // 서버에서 로그인 성공 여부 확인
+      dispatch(login(email)); // Redux 상태 업데이트
+      showToast("success", "로그인 성공!");
       clearFields();
-      navigate("/");
+      navigate("/"); // 메인 페이지로 이동
     } catch (err) {
       showToast("error", err.message);
     }

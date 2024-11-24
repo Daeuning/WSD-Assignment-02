@@ -1,6 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../redux/authSlice.js";
 
 const NavBarContainer = styled.div`
   display: flex;
@@ -22,8 +24,8 @@ const Logo = styled.div`
   margin-right: 25px;
 
   a {
-    text-decoration: none; /* underline 제거 */
-    color: inherit; /* 부모 색상 상속 */
+    text-decoration: none;
+    color: inherit;
   }
 `;
 
@@ -45,44 +47,105 @@ const MenuItem = styled.a`
 
 const LoginTab = styled.div`
   display: flex;
+  align-items: center;
   cursor: pointer;
+  gap: 5px;
 
   &:hover {
     color: #007655;
   }
 
   a {
-    text-decoration: none; /* underline 제거 */
-    color: inherit; /* 부모 색상 상속 */
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--basic-font);
+  }
+
+  button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--basic-font);
+
+    &:hover {
+      color: var(--primary-color);
+    }
   }
 `;
 
 function NavBar() {
+  const dispatch = useDispatch();
+  const { isLoggedIn, currentUser } = useSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <NavBarContainer>
       <LeftSection>
-        {/* 로고를 클릭하면 메인 페이지로 이동 */}
         <Logo>
-          <Link to="/" className="material-symbols-outlined md-primary md-36">movie</Link>
+          <Link to="/" className="material-symbols-outlined md-primary md-36">
+            movie
+          </Link>
         </Logo>
         <Menu>
-          {/* 메뉴 항목에 경로 추가 */}
           <MenuItem>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>홈</Link>
+            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+              홈
+            </Link>
           </MenuItem>
           <MenuItem>
-            <Link to="/popular" style={{ textDecoration: 'none', color: 'inherit' }}>대세 콘텐츠</Link>
+            <Link
+              to="/popular"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              대세 콘텐츠
+            </Link>
           </MenuItem>
           <MenuItem>
-            <Link to="/search" style={{ textDecoration: 'none', color: 'inherit' }}>찾아보기</Link>
+            <Link
+              to="/search"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              찾아보기
+            </Link>
           </MenuItem>
           <MenuItem>
-            <Link to="/wishlist" style={{ textDecoration: 'none', color: 'inherit' }}>내가 찜한 리스트</Link>
+            <Link
+              to="/wishlist"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              내가 찜한 리스트
+            </Link>
           </MenuItem>
         </Menu>
       </LeftSection>
       <LoginTab>
-        <Link to="/signin" className="material-symbols-outlined md-basic-white md-28">account_circle</Link>
+        {isLoggedIn ? (
+          <>
+            <span>안녕하세요, {currentUser}님</span>
+            <span>|</span>
+            <button onClick={handleLogout}>로그아웃</button>
+          </>
+        ) : (
+          <Link to="/signin">
+            <span className="material-symbols-outlined md-basic-white md-24">
+              account_circle
+            </span>
+            <span>로그인</span>
+          </Link>
+        )}
       </LoginTab>
     </NavBarContainer>
   );
