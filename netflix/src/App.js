@@ -1,31 +1,18 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { ToastContainer } from "react-toastify"; // ToastContainer 추가
-import "react-toastify/dist/ReactToastify.css"; // Toast 스타일 추가
 import Main from "../src/pages/Main.jsx";
 import SignIn from "../src/pages/SignIn.jsx";
 import Popular from "../src/pages/Popular.jsx";
 import Search from "../src/pages/Search.jsx";
 import WishList from "../src/pages/WishList.jsx";
 import NavBar from "../src/layout/NavBar.jsx";
+import { CustomToastContainer } from "../src/utils/toast/customToast.js"; // 커스텀 ToastContainer
 import "./App.css";
 
 function App() {
   return (
     <>
       <NavBar />
-      {/* ToastContainer를 최상위 레벨에 추가 */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
       <Routes>
         {/* 메인 페이지 */}
         <Route path="/" element={<Main />} />
@@ -38,6 +25,7 @@ function App() {
         {/* 내가 찜한 리스트 */}
         <Route path="/wishlist" element={<WishList />} />
       </Routes>
+      <CustomToastContainer /> {/* 커스텀 ToastContainer 추가 */}
     </>
   );
 }

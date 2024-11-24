@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { handleRegister } from "../utils/auth/handleRegister.js"; // handleRegister 함수 가져오기
-import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로 수정
+import { showToast } from "../utils/toast/customToast.js"; // Toast 메시지 유틸리티 함수
+import { handleRegister } from "../utils/auth/handleRegister"; // 회원가입 처리 함수
+import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로
 
 const Container = styled.div`
   margin: auto;
@@ -22,7 +21,7 @@ const Welcome = styled.div`
   /* 배경 이미지 */
   background-image: 
     linear-gradient(
-      rgba(0, 0, 0, 0.7), /* 더 어두운 레이어 */
+      rgba(0, 0, 0, 0.7), /* 어두운 레이어 */
       rgba(0, 0, 0, 0.7)
     ), 
     url(${MovieImage}); /* 이미지 경로 */
@@ -38,14 +37,14 @@ const FormBox = styled.div`
   position: absolute;
   top: -10%;
   left: ${({ isSignUp }) => (isSignUp ? '45%' : '5%')};
-  background: var(--white-04dp); /* 반투명 배경 */
-  backdrop-filter: blur(15px) brightness(0.8); /* 유리 효과 */
-  border: 1px solid var(--white-01dp); /* 가벼운 테두리 */
+  background: var(--white-04dp);
+  backdrop-filter: blur(15px) brightness(0.8);
+  border: 1px solid var(--white-01dp);
   width: 320px;
   height: 500px;
   border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* 어두운 그림자 */
-  transition: all 0.5s ease-in-out; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: all 0.5s ease-in-out;
   z-index: 2;
 `;
 
@@ -60,18 +59,16 @@ const FormContainer = styled.div`
   transition: opacity 0.5s ease, visibility 0.5s ease;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center-align the form container */
+  align-items: center;
   justify-content: center;
-  color: var(--basic-font);
 
   form {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center-align form contents */
-    width: 90%; /* Ensure proper spacing for form elements */
+    align-items: center;
+    width: 90%;
   }
 `;
-
 
 const LeftBox = styled.div`
   position: absolute;
@@ -154,7 +151,7 @@ const Button = styled.button`
 const Input = styled.input`
   display: block;
   width: 90%;
-  margin: 5px auto; /* Reduced from 10px to 5px */
+  margin: 5px auto;
   padding: 10px;
   color: var(--basic-font);
   background-color: var(--white-03dp);
@@ -165,9 +162,10 @@ const Input = styled.input`
 const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Left-align the checkbox and label */
-  width: 100%; /* Take full width to ensure alignment */
+  justify-content: flex-start;
+  width: 100%;
   margin-top: 10px;
+  color: var(--basic-font);
 
   label {
     margin-left: 5px;
@@ -176,62 +174,57 @@ const CheckboxContainer = styled.div`
 `;
 
 const SignInUI = () => {
-  const [isSignUp, setIsSignUp] = useState(false); // 회원가입/로그인 상태 전환
-  const [email, setEmail] = useState(""); // 이메일 상태
-  const [password, setPassword] = useState(""); // 비밀번호 상태
-  const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 상태
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  // 입력 필드 초기화 함수
   const clearFields = () => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
   };
 
+  const handleRegisterSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const message = await handleRegister(email, password, confirmPassword);
+      showToast("success", message); // 성공 메시지
+      clearFields();
+      setIsSignUp(false); // 로그인 화면으로 전환
+    } catch (err) {
+      showToast("error", err.message); // 에러 메시지
+    }
+  };
+
   return (
     <Container>
       <Welcome>
         <FormBox isSignUp={isSignUp}>
-          {/* 회원가입 폼 */}
           <FormContainer isHidden={!isSignUp}>
             <FormTitle>register</FormTitle>
-            <form
-              autoComplete="off"
-              onSubmit={async (e) => {
-                e.preventDefault(); // 기본 폼 제출 동작 방지
-                try {
-                  const message = await handleRegister(email, password, confirmPassword); // 회원가입 처리
-                  toast.success(message); // 성공 메시지
-                  clearFields();
-                  setIsSignUp(false); // 로그인 화면으로 전환
-                } catch (err) {
-                  toast.error(err.message); // 에러 메시지 표시
-                }
-              }}
-            >
+            <form autoComplete="off" onSubmit={handleRegisterSubmit}>
               <Input
                 type="email"
                 placeholder="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)} // 이메일 상태 업데이트
+                onChange={(e) => setEmail(e.target.value)}
               />
               <Input
                 type="password"
                 placeholder="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)} // 비밀번호 상태 업데이트
+                onChange={(e) => setPassword(e.target.value)}
               />
               <Input
                 type="password"
                 placeholder="confirm password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)} // 비밀번호 확인 상태 업데이트
+                onChange={(e) => setConfirmPassword(e.target.value)}
               />
               <Button type="submit">create account</Button>
             </form>
           </FormContainer>
-
-          {/* 로그인 폼 */}
           <FormContainer isHidden={isSignUp}>
             <FormTitle>sign in</FormTitle>
             <form autoComplete="off">
@@ -245,8 +238,6 @@ const SignInUI = () => {
             </form>
           </FormContainer>
         </FormBox>
-
-        {/* 전환 버튼 */}
         <LeftBox isSignUp={isSignUp}>
           <Title>Webflix</Title>
           <Desc>
