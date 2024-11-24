@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import MovieImage from '../assets/img/movie.jpg'; // 이미지 경로에 맞게 수정
+import React, { useState } from "react";
+import styled from "styled-components";
+import { handleRegister } from "../utils/auth/handleRegister.js"; // handleRegister 함수 가져오기
+import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로 수정
 
 const Container = styled.div`
   margin: auto;
@@ -173,21 +174,64 @@ const CheckboxContainer = styled.div`
 `;
 
 const SignInUI = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false); // 회원가입/로그인 상태 전환
+  const [email, setEmail] = useState(""); // 이메일 상태
+  const [password, setPassword] = useState(""); // 비밀번호 상태
+  const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 상태
+  const [error, setError] = useState(""); // 에러 메시지 상태
+
+  // 입력 필드 초기화 함수
+  const clearFields = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+  };
 
   return (
     <Container>
       <Welcome>
         <FormBox isSignUp={isSignUp}>
+          {/* 회원가입 폼 */}
           <FormContainer isHidden={!isSignUp}>
-          <FormTitle>register</FormTitle>
-            <form autoComplete="off">
-              <Input type="email" placeholder="email" />
-              <Input type="password" placeholder="password" />
-              <Input type="password" placeholder="confirm password" />
+            <FormTitle>register</FormTitle>
+            <form
+              autoComplete="off"
+              onSubmit={(e) => {
+                e.preventDefault(); // 기본 폼 제출 동작 방지
+                handleRegister(
+                  email,
+                  password,
+                  confirmPassword,
+                  setError,
+                  clearFields,
+                  setIsSignUp // 회원가입 성공 시 로그인 화면으로 전환
+                );
+              }}
+            >
+              <Input
+                type="email"
+                placeholder="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} // 이메일 상태 업데이트
+              />
+              <Input
+                type="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)} // 비밀번호 상태 업데이트
+              />
+              <Input
+                type="password"
+                placeholder="confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)} // 비밀번호 확인 상태 업데이트
+              />
+              {error && <p style={{ color: "red" }}>{error}</p>} {/* 에러 메시지 표시 */}
               <Button type="submit">create account</Button>
             </form>
           </FormContainer>
+
+          {/* 로그인 폼 */}
           <FormContainer isHidden={isSignUp}>
             <FormTitle>sign in</FormTitle>
             <form autoComplete="off">
@@ -201,10 +245,10 @@ const SignInUI = () => {
             </form>
           </FormContainer>
         </FormBox>
+
+        {/* 전환 버튼 */}
         <LeftBox isSignUp={isSignUp}>
-          <Title>
-            Webflix
-          </Title>
+          <Title>Webflix</Title>
           <Desc>
             시청할 준비가 되셨나요?
             <br />
@@ -215,12 +259,8 @@ const SignInUI = () => {
           <Button onClick={() => setIsSignUp(false)}>login</Button>
         </LeftBox>
         <RightBox isSignUp={isSignUp}>
-          <Title>
-            Webflix
-          </Title>
-          <Desc>
-            계정이 없으신가요?
-          </Desc>
+          <Title>Webflix</Title>
+          <Desc>계정이 없으신가요?</Desc>
           <Button onClick={() => setIsSignUp(true)}>sign up</Button>
         </RightBox>
       </Welcome>
