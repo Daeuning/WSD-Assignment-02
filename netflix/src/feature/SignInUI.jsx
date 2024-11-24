@@ -211,6 +211,7 @@ const SignInUI = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isAgreed, setIsAgreed] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false); // Remember me 상태 추가
 
   const clearFields = () => {
     setEmail("");
@@ -240,6 +241,14 @@ const SignInUI = () => {
     try {
       await handleLogin(email, password); // 서버에서 로그인 성공 여부 확인
       dispatch(login(email)); // Redux 상태 업데이트
+
+      // Remember me 체크 여부에 따라 localStorage에 저장 유지
+      if (rememberMe) {
+        localStorage.setItem("rememberMe", "true");
+      } else {
+        localStorage.removeItem("rememberMe");
+      }
+
       showToast("success", "로그인 성공!");
       clearFields();
       navigate("/"); // 메인 페이지로 이동
@@ -301,8 +310,13 @@ const SignInUI = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <CheckboxContainer>
-                <input type="checkbox" id="remember" />
-                <label htmlFor="remember">remember me</label>
+                <input
+                  type="checkbox"
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                />
+                <label htmlFor="rememberMe">remember me</label>
               </CheckboxContainer>
               <Button type="submit">login</Button>
             </form>
