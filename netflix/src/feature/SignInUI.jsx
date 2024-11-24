@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { handleRegister } from "../utils/auth/handleRegister.js"; // handleRegister 함수 가져오기
 import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로 수정
 
@@ -178,7 +180,6 @@ const SignInUI = () => {
   const [email, setEmail] = useState(""); // 이메일 상태
   const [password, setPassword] = useState(""); // 비밀번호 상태
   const [confirmPassword, setConfirmPassword] = useState(""); // 비밀번호 확인 상태
-  const [error, setError] = useState(""); // 에러 메시지 상태
 
   // 입력 필드 초기화 함수
   const clearFields = () => {
@@ -189,6 +190,7 @@ const SignInUI = () => {
 
   return (
     <Container>
+      <ToastContainer /> {/* ToastContainer 추가 */}
       <Welcome>
         <FormBox isSignUp={isSignUp}>
           {/* 회원가입 폼 */}
@@ -196,16 +198,16 @@ const SignInUI = () => {
             <FormTitle>register</FormTitle>
             <form
               autoComplete="off"
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault(); // 기본 폼 제출 동작 방지
-                handleRegister(
-                  email,
-                  password,
-                  confirmPassword,
-                  setError,
-                  clearFields,
-                  setIsSignUp // 회원가입 성공 시 로그인 화면으로 전환
-                );
+                try {
+                  const message = await handleRegister(email, password, confirmPassword); // 회원가입 처리
+                  toast.success(message); // 성공 메시지
+                  clearFields();
+                  setIsSignUp(false); // 로그인 화면으로 전환
+                } catch (err) {
+                  toast.error(err.message); // 에러 메시지 표시
+                }
               }}
             >
               <Input
@@ -226,7 +228,6 @@ const SignInUI = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)} // 비밀번호 확인 상태 업데이트
               />
-              {error && <p style={{ color: "red" }}>{error}</p>} {/* 에러 메시지 표시 */}
               <Button type="submit">create account</Button>
             </form>
           </FormContainer>

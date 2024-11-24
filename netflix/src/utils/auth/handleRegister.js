@@ -1,4 +1,3 @@
-// handleRegister.js
 import AuthService from "./authService";
 
 const authService = new AuthService();
@@ -8,23 +7,16 @@ const authService = new AuthService();
  * @param {string} email - 사용자 이메일
  * @param {string} password - 사용자 비밀번호
  * @param {string} confirmPassword - 비밀번호 확인
- * @param {function} setError - 에러 메시지 상태 업데이트 함수
- * @param {function} clearFields - 입력 필드 초기화 함수
- * @param {function} setIsSignUp - 회원가입/로그인 상태 전환 함수
  */
-export const handleRegister = async (email, password, confirmPassword, setError, clearFields, setIsSignUp) => {
+export const handleRegister = async (email, password, confirmPassword) => {
   if (password !== confirmPassword) {
-    setError("Passwords do not match!"); // 비밀번호 불일치 에러
-    return;
+    throw new Error("Passwords do not match!"); // 비밀번호 불일치 에러
   }
 
   try {
-    await authService.tryRegister(email, password); // authService의 회원가입 메서드 호출
-    alert("회원가입 성공!");
-    clearFields(); // 입력 필드 초기화
-    setError(""); // 에러 메시지 초기화
-    setIsSignUp(false); // 로그인 화면으로 전환
+    await authService.tryRegister(email, password); // 회원가입 요청
+    return "회원가입 성공!";
   } catch (err) {
-    setError(err); // 에러 메시지 설정
+    throw new Error(err); // 발생한 에러 전달
   }
 };
