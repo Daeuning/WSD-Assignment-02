@@ -41,7 +41,7 @@ const MenuItem = styled.a`
   cursor: pointer;
 
   &:hover {
-    color: #007bff;
+    color: var(--primary-color);
   }
 `;
 
