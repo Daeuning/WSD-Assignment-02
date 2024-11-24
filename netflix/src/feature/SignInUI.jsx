@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { showToast } from "../utils/toast/customToast"; // Toast 메시지 유틸리티 함수
-import { handleRegister } from "../utils/auth/handleRegister"; // 회원가입 처리 함수
-import { handleLogin } from "../utils/auth/handleLogin"; // 로그인 처리 함수
-import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로
+import { showToast } from "../utils/toast/customToast";
+import { handleRegister } from "../utils/auth/handleRegister";
+import { handleLogin } from "../utils/auth/handleLogin";
+import MovieImage from "../assets/img/movie.jpg";
 
 const Container = styled.div`
   margin: auto;
@@ -19,19 +19,15 @@ const Welcome = styled.div`
   width: 650px;
   height: 415px;
   border-radius: 5px;
-
-  /* 배경 이미지 */
   background-image: 
     linear-gradient(
-      rgba(0, 0, 0, 0.7), /* 어두운 레이어 */
+      rgba(0, 0, 0, 0.7),
       rgba(0, 0, 0, 0.7)
     ), 
-    url(${MovieImage}); /* 이미지 경로 */
+    url(${MovieImage});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  /* 배경 블러 효과 */
   backdrop-filter: blur(10px);
 `;
 
@@ -172,8 +168,39 @@ const CheckboxContainer = styled.div`
   label {
     margin-left: 5px;
     font-size: 0.8em;
+    cursor: pointer;
+  }
+
+  input[type="checkbox"] {
+    appearance: none; /* 기본 체크박스 스타일 제거 */
+    width: 16px; /* 크기 조정 */
+    height: 16px; /* 크기 조정 */
+    margin-right: 8px;
+    border: 2px solid var(--white-02dp);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background-color: transparent;
+
+    &:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    &:checked::after {
+      content: '✔'; /* 체크 아이콘 표시 */
+      position: absolute;
+      top: 50%; /* 정중앙에 위치 */
+      left: 50%; /* 정중앙에 위치 */
+      transform: translate(-50%, -50%); /* 중앙 정렬 */
+      font-size: 10px; /* 아이콘 크기 조정 */
+      color: var(--basic-font); /* 아이콘 색상 */
+    }
   }
 `;
+
 
 const SignInUI = () => {
   const navigate = useNavigate();
@@ -181,15 +208,21 @@ const SignInUI = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isAgreed, setIsAgreed] = useState(false);
 
   const clearFields = () => {
     setEmail("");
     setPassword("");
     setConfirmPassword("");
+    setIsAgreed(false);
   };
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    if (!isAgreed) {
+      showToast("error", "약관에 동의해야 회원가입이 가능합니다.");
+      return;
+    }
     try {
       const message = await handleRegister(email, password, confirmPassword);
       showToast("success", message);
@@ -206,7 +239,7 @@ const SignInUI = () => {
       const message = await handleLogin(email, password);
       showToast("success", message);
       clearFields();
-      navigate("/"); // 로그인 성공 시 메인 페이지로 라우팅
+      navigate("/");
     } catch (err) {
       showToast("error", err.message);
     }
@@ -237,6 +270,15 @@ const SignInUI = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
+              <CheckboxContainer>
+                <input
+                  type="checkbox"
+                  id="agreeTerms"
+                  checked={isAgreed}
+                  onChange={(e) => setIsAgreed(e.target.checked)}
+                />
+                <label htmlFor="agreeTerms">약관에 동의합니다.</label>
+              </CheckboxContainer>
               <Button type="submit">create account</Button>
             </form>
           </FormContainer>
