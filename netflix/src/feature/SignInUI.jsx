@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { handleRegister } from "../utils/auth/handleRegister.js"; // handleRegister 함수 가져오기
 import MovieImage from "../assets/img/movie.jpg"; // 이미지 경로 수정
@@ -190,7 +190,6 @@ const SignInUI = () => {
 
   return (
     <Container>
-      <ToastContainer /> {/* ToastContainer 추가 */}
       <Welcome>
         <FormBox isSignUp={isSignUp}>
           {/* 회원가입 폼 */}

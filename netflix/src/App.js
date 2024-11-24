@@ -1,17 +1,31 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Main from '../src/pages/Main.jsx';
-import SignIn from '../src/pages/SignIn.jsx';
-import Popular from '../src/pages/Popular.jsx';
-import Search from '../src/pages/Search.jsx';
-import WishList from '../src/pages/WishList.jsx';
-import NavBar from '../src/layout/NavBar.jsx';
-import './App.css';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify"; // ToastContainer 추가
+import "react-toastify/dist/ReactToastify.css"; // Toast 스타일 추가
+import Main from "../src/pages/Main.jsx";
+import SignIn from "../src/pages/SignIn.jsx";
+import Popular from "../src/pages/Popular.jsx";
+import Search from "../src/pages/Search.jsx";
+import WishList from "../src/pages/WishList.jsx";
+import NavBar from "../src/layout/NavBar.jsx";
+import "./App.css";
 
 function App() {
   return (
     <>
-    <NavBar />
+      <NavBar />
+      {/* ToastContainer를 최상위 레벨에 추가 */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Routes>
         {/* 메인 페이지 */}
         <Route path="/" element={<Main />} />
