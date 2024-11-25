@@ -16,8 +16,8 @@ const ArrowButton = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0; /* 초기 상태에서는 보이지 않음 */
-  pointer-events: none; /* 초기 상태에서는 클릭 불가능 */
+  opacity: 0;
+  pointer-events: none;
   transition: opacity 0.3s ease, background-color 0.3s ease;
 
   &:hover {
@@ -44,7 +44,7 @@ const CarouselContainer = styled.div`
 
   &:hover ${ArrowButton} {
     opacity: 1;
-    pointer-events: auto; /* 클릭 가능 */
+    pointer-events: auto;
   }
 `;
 
@@ -53,13 +53,13 @@ const CarouselTitle = styled.div`
   font-weight: 600;
   font-size: 24px;
   margin-bottom: 10px;
-  text-align: left; /* 왼쪽 정렬 추가 */
-  width: 82%; /* 부모 요소 기준으로 왼쪽 정렬 유지 */
+  text-align: left;
+  width: 82%;
 `;
 
 const CarouselContent = styled.div`
   display: flex;
-  overflow-x: hidden; /* 스크롤 숨기기 */
+  overflow-x: hidden;
   scroll-snap-type: x mandatory;
   max-width: 82%;
   gap: 16px;
@@ -80,28 +80,43 @@ const MovieCard = styled.div`
   background-position: center;
   scroll-snap-align: start;
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: scale(1.05);
-    transition: transform 0.3s ease;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 약간의 그림자 효과 */
+  }
+
+  &:hover > div {
+    opacity: 1;
   }
 `;
 
-const MovieTitle = styled.div`
+const Overlay = styled.div`
   position: absolute;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.7);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--white-01dp);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--white-03dp);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease; /* MovieCard와 동일한 애니메이션 속도 */
+`;
+
+const InfoText = styled.div`
   color: #fff;
-  font-size: 14px;
-  padding: 5px;
-  border-radius: 5px;
   text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  font-size: 14px;
+  margin: 5px 0;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.5);
 `;
 
 const MovieListCarousel = ({ fetchMovies, title }) => {
@@ -123,7 +138,7 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
 
   const slide = (direction) => {
     if (carouselRef.current) {
-      const scrollAmount = carouselRef.current.offsetWidth * 0.8; // 화면 너비의 80%만큼 이동
+      const scrollAmount = carouselRef.current.offsetWidth * 0.8;
       const currentScroll = carouselRef.current.scrollLeft;
 
       if (direction === "left") {
@@ -144,7 +159,9 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
     <CarouselContainer>
       <CarouselTitle>{title}</CarouselTitle>
       <ArrowButton className="left" onClick={() => slide("left")}>
-      <span class="material-symbols-outlined md-basic-white">chevron_left</span>
+        <span className="material-symbols-outlined md-basic-white">
+          chevron_left
+        </span>
       </ArrowButton>
       <CarouselContent ref={carouselRef}>
         {movies.map((movie) => (
@@ -154,12 +171,19 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
               backgroundImage: `url(https://image.tmdb.org/t/p/w500${movie.poster_path})`,
             }}
           >
-            <MovieTitle>{movie.title}</MovieTitle>
+            <Overlay>
+              <InfoText>{movie.title}</InfoText>
+              <InfoText>평점: {movie.vote_average}</InfoText>
+              <InfoText>개봉일: {movie.release_date}</InfoText>
+              <InfoText>장르: {movie.genre_names?.join(", ")}</InfoText>
+            </Overlay>
           </MovieCard>
         ))}
       </CarouselContent>
       <ArrowButton className="right" onClick={() => slide("right")}>
-        <span class="material-symbols-outlined md-basic-white">chevron_right</span>
+        <span className="material-symbols-outlined md-basic-white">
+          chevron_right
+        </span>
       </ArrowButton>
     </CarouselContainer>
   );
