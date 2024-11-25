@@ -3,7 +3,8 @@ import videoListService from "../service/videoListService.js";
 
 const ShowVideo = ({ movieId }) => {
   const [videoKey, setVideoKey] = useState(null); // YouTube 비디오 키
-  const [backgroundImage, setBackgroundImage] = useState(null); // 배경 이미지 (가로형 사진)
+  const [backgroundImage, setBackgroundImage] = useState(null); // 배경 이미지
+  const [movieDetails, setMovieDetails] = useState(null); // 영화 상세정보
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false); // 재생 상태
   const iframeRef = useRef(null); // iframe DOM reference
@@ -20,9 +21,12 @@ const ShowVideo = ({ movieId }) => {
 
     const fetchMovieData = async () => {
       try {
-        const movieDetails = await videoListService.fetchMovieDetails(movieId);
-        setBackgroundImage(`https://image.tmdb.org/t/p/original${movieDetails.backdrop_path}`); // 가로형 배경 이미지
+        // 영화 상세정보 가져오기
+        const details = await videoListService.fetchMovieDetails(movieId);
+        setMovieDetails(details);
+        setBackgroundImage(`https://image.tmdb.org/t/p/original${details.backdrop_path}`);
 
+        // 영화 비디오 가져오기
         const videos = await videoListService.fetchMovieVideos(movieId);
         const youtubeVideo = videos.find(
           (video) => video.site === "YouTube" && video.type === "Trailer"
@@ -71,7 +75,7 @@ const ShowVideo = ({ movieId }) => {
 
   if (error) return <p>{error}</p>;
 
-  if (!videoKey || !backgroundImage) return <p>Loading...</p>;
+  if (!videoKey || !backgroundImage || !movieDetails) return <p>Loading...</p>;
 
   return (
     <div
@@ -80,11 +84,43 @@ const ShowVideo = ({ movieId }) => {
         position: "relative",
         width: "100%",
         height: "500px",
-        backgroundImage: isPlaying ? "none" : `url(${backgroundImage})`, // 가로형 배경 이미지
+        backgroundImage: isPlaying ? "none" : `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
+      {!isPlaying && (
+        <div
+          style={{
+            position: "absolute",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            zIndex: "1",
+          }}
+        />
+      )}
+      {!isPlaying && (
+        <div
+          style={{
+            position: "absolute",
+            top: "32%",
+            left: "8%",
+            color: "#fff",
+            zIndex: "2",
+            maxWidth: "25%",
+          }}
+        >
+          <h1 style={{ fontSize: "36px", marginBottom: "20px" }}>
+            {movieDetails.title}
+          </h1>
+          <p style={{ fontSize: "16px", lineHeight: "1.5" }}>
+            {movieDetails.overview}
+          </p>
+        </div>
+      )}
       {!isPlaying ? (
         <button
           onClick={handlePlay}
@@ -93,8 +129,9 @@ const ShowVideo = ({ movieId }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            color: "#fff",
+            zIndex: "2",
+            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            color: "#000",
             fontSize: "20px",
             padding: "10px 20px",
             border: "none",
