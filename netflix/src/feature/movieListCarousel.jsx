@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 
 const CarouselContainer = styled.div`
-  max-width: 84%; /* 중앙 정렬을 위한 최대 너비 */
-  margin: 0 auto; /* 가로 중앙 정렬 */
-  padding: 70px 0px 10px 0px; /* 위아래 여백 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 70px 0px 10px 0px;
+  position: relative; /* 화살표 버튼 위치를 위한 기준 */
 `;
 
 const CarouselTitle = styled.div`
@@ -12,18 +16,21 @@ const CarouselTitle = styled.div`
   font-weight: 600;
   font-size: 24px;
   margin-bottom: 10px;
-  padding-left: 20px; /* 제목 왼쪽 여백 */
+  text-align: left; /* 왼쪽 정렬 추가 */
+  width: 82%; /* 부모 요소 기준으로 왼쪽 정렬 유지 */
 `;
 
 const CarouselContent = styled.div`
   display: flex;
-  overflow-x: auto;
+  overflow-x: hidden; /* 스크롤 숨기기 */
   scroll-snap-type: x mandatory;
+  max-width: 82%;
   gap: 16px;
-  padding: 10px 20px; /* 캐러셀 양쪽 여백 */
+  padding: 10px 20px;
+  position: relative;
 
   &::-webkit-scrollbar {
-    display: none; /* 스크롤바 숨기기 */
+    display: none;
   }
 `;
 
@@ -36,7 +43,7 @@ const MovieCard = styled.div`
   background-position: center;
   scroll-snap-align: start;
   position: relative;
-  z-index: 2;
+  z-index: 1;
 
   &:hover {
     transform: scale(1.05);
@@ -60,8 +67,39 @@ const MovieTitle = styled.div`
   white-space: nowrap;
 `;
 
+const ArrowButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  &.left {
+    left: 10px;
+  }
+
+  &.right {
+    right: 10px;
+  }
+`;
+
 const MovieListCarousel = ({ fetchMovies, title }) => {
   const [movies, setMovies] = useState([]);
+  const carouselRef = useRef(null);
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -76,10 +114,32 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
     loadMovies();
   }, [fetchMovies]);
 
+  const slide = (direction) => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.offsetWidth * 0.8; // 화면 너비의 80%만큼 이동
+      const currentScroll = carouselRef.current.scrollLeft;
+
+      if (direction === "left") {
+        carouselRef.current.scrollTo({
+          left: currentScroll - scrollAmount,
+          behavior: "smooth",
+        });
+      } else if (direction === "right") {
+        carouselRef.current.scrollTo({
+          left: currentScroll + scrollAmount,
+          behavior: "smooth",
+        });
+      }
+    }
+  };
+
   return (
     <CarouselContainer>
       <CarouselTitle>{title}</CarouselTitle>
-      <CarouselContent>
+      <ArrowButton className="left" onClick={() => slide("left")}>
+        &#8249;
+      </ArrowButton>
+      <CarouselContent ref={carouselRef}>
         {movies.map((movie) => (
           <MovieCard
             key={movie.id}
@@ -91,6 +151,9 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
           </MovieCard>
         ))}
       </CarouselContent>
+      <ArrowButton className="right" onClick={() => slide("right")}>
+        &#8250;
+      </ArrowButton>
     </CarouselContainer>
   );
 };
