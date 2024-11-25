@@ -1,6 +1,38 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 
+const ArrowButton = styled.button`
+  position: absolute;
+  top: 58%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0; /* 초기 상태에서는 보이지 않음 */
+  pointer-events: none; /* 초기 상태에서는 클릭 불가능 */
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  &.left {
+    left: 70px;
+  }
+
+  &.right {
+    right: 70px;
+  }
+`;
+
 const CarouselContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -8,7 +40,12 @@ const CarouselContainer = styled.div`
   align-items: center;
   margin: 0 auto;
   padding: 70px 0px 10px 0px;
-  position: relative; /* 화살표 버튼 위치를 위한 기준 */
+  position: relative;
+
+  &:hover ${ArrowButton} {
+    opacity: 1;
+    pointer-events: auto; /* 클릭 가능 */
+  }
 `;
 
 const CarouselTitle = styled.div`
@@ -67,36 +104,6 @@ const MovieTitle = styled.div`
   white-space: nowrap;
 `;
 
-const ArrowButton = styled.button`
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  color: #fff;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-  }
-
-  &.left {
-    left: 10px;
-  }
-
-  &.right {
-    right: 10px;
-  }
-`;
-
 const MovieListCarousel = ({ fetchMovies, title }) => {
   const [movies, setMovies] = useState([]);
   const carouselRef = useRef(null);
@@ -137,7 +144,7 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
     <CarouselContainer>
       <CarouselTitle>{title}</CarouselTitle>
       <ArrowButton className="left" onClick={() => slide("left")}>
-        &#8249;
+      <span class="material-symbols-outlined md-basic-white">chevron_left</span>
       </ArrowButton>
       <CarouselContent ref={carouselRef}>
         {movies.map((movie) => (
@@ -152,7 +159,7 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
         ))}
       </CarouselContent>
       <ArrowButton className="right" onClick={() => slide("right")}>
-        &#8250;
+        <span class="material-symbols-outlined md-basic-white">chevron_right</span>
       </ArrowButton>
     </CarouselContainer>
   );
