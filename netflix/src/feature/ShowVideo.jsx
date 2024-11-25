@@ -1,56 +1,55 @@
-import React, { useEffect, useState, useRef } from 'react';
-import videoListService from '../service/videoListService.js';
+import React, { useEffect, useState, useRef } from "react";
+import videoListService from "../service/videoListService.js";
 
-const ShowVideo = ({ movieId, backgroundImage }) => {
+const ShowVideo = ({ movieId }) => {
   const [videoKey, setVideoKey] = useState(null); // YouTube 비디오 키
+  const [backgroundImage, setBackgroundImage] = useState(null); // 배경 이미지 (가로형 사진)
   const [error, setError] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false); // 재생 상태
   const iframeRef = useRef(null); // iframe DOM reference
   const pauseTimer = useRef(null); // Pause 타이머
 
   useEffect(() => {
-    // YouTube Iframe API 로드
     const loadYouTubeAPI = () => {
       if (!window.YT) {
-        const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
-        tag.onload = () => {
-          console.log('YouTube Iframe API loaded.');
-        };
+        const tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
         document.body.appendChild(tag);
       }
     };
 
-    loadYouTubeAPI();
-
-    const fetchVideos = async () => {
+    const fetchMovieData = async () => {
       try {
+        const movieDetails = await videoListService.fetchMovieDetails(movieId);
+        setBackgroundImage(`https://image.tmdb.org/t/p/original${movieDetails.backdrop_path}`); // 가로형 배경 이미지
+
         const videos = await videoListService.fetchMovieVideos(movieId);
         const youtubeVideo = videos.find(
-          (video) => video.site === 'YouTube' && video.type === 'Trailer'
-        ); // YouTube 트레일러 찾기
+          (video) => video.site === "YouTube" && video.type === "Trailer"
+        );
         if (youtubeVideo) {
           setVideoKey(youtubeVideo.key);
         } else {
-          setError('No YouTube trailer available for this movie.');
+          setError("No YouTube trailer available for this movie.");
         }
       } catch (err) {
-        setError('Failed to fetch video data.');
+        setError("Failed to fetch movie data.");
       }
     };
 
-    fetchVideos();
+    loadYouTubeAPI();
+    fetchMovieData();
   }, [movieId]);
 
   const handlePlay = () => {
-    setIsPlaying(true); // 재생 상태를 true로 변경
+    setIsPlaying(true);
   };
 
   const handlePause = () => {
     if (pauseTimer.current) clearTimeout(pauseTimer.current);
     pauseTimer.current = setTimeout(() => {
-      setIsPlaying(false); // 원래 상태로 복구
-    }, 5000); // 5초 후 복구
+      setIsPlaying(false);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -59,59 +58,55 @@ const ShowVideo = ({ movieId, backgroundImage }) => {
         events: {
           onStateChange: (event) => {
             if (event.data === window.YT.PlayerState.PAUSED) {
-              handlePause(); // Pause 상태 처리
+              handlePause();
             } else if (event.data === window.YT.PlayerState.PLAYING) {
-              clearTimeout(pauseTimer.current); // Pause 타이머 초기화
+              clearTimeout(pauseTimer.current);
             }
           },
         },
       });
-      return () => player.destroy(); // 컴포넌트가 언마운트될 때 정리
+      return () => player.destroy();
     }
   }, [isPlaying, videoKey]);
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+  if (error) return <p>{error}</p>;
 
-  if (!videoKey) {
-    return <p>Loading...</p>;
-  }
+  if (!videoKey || !backgroundImage) return <p>Loading...</p>;
 
   return (
     <div
       className="video-container"
       style={{
-        position: 'relative',
-        width: '100%',
-        height: '500px',
-        backgroundImage: isPlaying ? 'none' : `url(${backgroundImage})`, // 배경 이미지
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
+        position: "relative",
+        width: "100%",
+        height: "500px",
+        backgroundImage: isPlaying ? "none" : `url(${backgroundImage})`, // 가로형 배경 이미지
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       {!isPlaying ? (
         <button
           onClick={handlePlay}
           style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            color: '#fff',
-            fontSize: '20px',
-            padding: '10px 20px',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "rgba(0, 0, 0, 0.7)",
+            color: "#fff",
+            fontSize: "20px",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
           }}
         >
           재생
         </button>
       ) : (
         <iframe
-          ref={iframeRef} // iframe reference 추가
+          ref={iframeRef}
           width="100%"
           height="500px"
           src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&enablejsapi=1`}
