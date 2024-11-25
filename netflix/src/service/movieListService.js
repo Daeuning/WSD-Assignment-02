@@ -1,5 +1,5 @@
 import axios from "axios";
-import { tbdb } from './config'; // config 파일에서 API URL 가져오기
+import { tbdb } from '../config'; // config 파일에서 API URL 가져오기
 
 const movieListService = {
   // LocalStorage에서 API 키 가져오기
