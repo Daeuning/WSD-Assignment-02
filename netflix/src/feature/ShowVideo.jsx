@@ -1,5 +1,30 @@
 import React, { useEffect, useState, useRef } from "react";
+import styled from "styled-components";
 import videoListService from "../service/videoListService.js";
+
+const PlayButton = styled.button`
+  background: var(--basic-font);
+  color: var(--black-font);
+  font-size: 18px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: transparent;
+    color: var(--primary-color);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+`;
 
 const ShowVideo = ({ movieId }) => {
   const [videoKey, setVideoKey] = useState(null); // YouTube 비디오 키
@@ -21,12 +46,10 @@ const ShowVideo = ({ movieId }) => {
 
     const fetchMovieData = async () => {
       try {
-        // 영화 상세정보 가져오기
         const details = await videoListService.fetchMovieDetails(movieId);
         setMovieDetails(details);
         setBackgroundImage(`https://image.tmdb.org/t/p/original${details.backdrop_path}`);
 
-        // 영화 비디오 가져오기
         const videos = await videoListService.fetchMovieVideos(movieId);
         const youtubeVideo = videos.find(
           (video) => video.site === "YouTube" && video.type === "Trailer"
@@ -119,24 +142,10 @@ const ShowVideo = ({ movieId }) => {
           <p style={{ fontSize: "16px", lineHeight: "1.5", marginBottom: "20px" }}>
             {movieDetails.overview}
           </p>
-          <button
-            onClick={handlePlay}
-            style={{
-              backgroundColor: "var(--basic-font)",
-              color: "var(--black-font)",
-              fontSize: "18px",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
+          <PlayButton onClick={handlePlay}>
             <span style={{ fontSize: "18px" }}>▶</span>
             재생
-          </button>
+          </PlayButton>
         </div>
       )}
       {isPlaying && (
