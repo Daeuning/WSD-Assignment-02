@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.65ddae23.css",
-    "main.js": "/static/js/main.ab852df3.js",
-    "static/js/453.1c29ee80.chunk.js": "/static/js/453.1c29ee80.chunk.js",
-    "static/media/movie.jpg": "/static/media/movie.d9dab80fe4b0ef73656b.jpg",
-    "static/media/NetflixSans-Bold.woff2": "/static/media/NetflixSans-Bold.95a94997132161906ea8.woff2",
-    "static/media/NetflixSans-Medium.woff2": "/static/media/NetflixSans-Medium.7f14db11c6cc61f4dadf.woff2",
-    "static/media/NetflixSans-Light.woff2": "/static/media/NetflixSans-Light.69bbd3374b688aadbf94.woff2",
-    "static/media/NetflixSans-Regular.woff2": "/static/media/NetflixSans-Regular.80119a3c6e4f2ebdfa63.woff2",
-    "index.html": "/index.html",
-    "main.65ddae23.css.map": "/static/css/main.65ddae23.css.map",
-    "main.ab852df3.js.map": "/static/js/main.ab852df3.js.map",
-    "453.1c29ee80.chunk.js.map": "/static/js/453.1c29ee80.chunk.js.map"
+    "main.css": "/WSD-Assignment-02/static/css/main.bf9688b9.css",
+    "main.js": "/WSD-Assignment-02/static/js/main.545ac3fa.js",
+    "static/js/453.1c29ee80.chunk.js": "/WSD-Assignment-02/static/js/453.1c29ee80.chunk.js",
+    "static/media/movie.jpg": "/WSD-Assignment-02/static/media/movie.d9dab80fe4b0ef73656b.jpg",
+    "static/media/NetflixSans-Bold.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Bold.95a94997132161906ea8.woff2",
+    "static/media/NetflixSans-Medium.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Medium.7f14db11c6cc61f4dadf.woff2",
+    "static/media/NetflixSans-Light.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Light.69bbd3374b688aadbf94.woff2",
+    "static/media/NetflixSans-Regular.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Regular.80119a3c6e4f2ebdfa63.woff2",
+    "index.html": "/WSD-Assignment-02/index.html",
+    "main.bf9688b9.css.map": "/WSD-Assignment-02/static/css/main.bf9688b9.css.map",
+    "main.545ac3fa.js.map": "/WSD-Assignment-02/static/js/main.545ac3fa.js.map",
+    "453.1c29ee80.chunk.js.map": "/WSD-Assignment-02/static/js/453.1c29ee80.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.65ddae23.css",
-    "static/js/main.ab852df3.js"
+    "static/css/main.bf9688b9.css",
+    "static/js/main.545ac3fa.js"
   ]
 }
