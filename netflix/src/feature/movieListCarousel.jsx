@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
+import movieListService from "../service/movieListService.js"; // 영화 데이터를 가져오는 서비스
 
 const ArrowButton = styled.button`
   position: absolute;
-  top: 58%;
+  top: 60%;
   transform: translateY(-50%);
   background-color: rgba(0, 0, 0, 0.5);
   border: none;
@@ -85,7 +86,7 @@ const MovieCard = styled.div`
 
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2); /* 약간의 그림자 효과 */
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
   }
 
   &:hover > div {
@@ -108,7 +109,7 @@ const Overlay = styled.div`
   border: 1px solid var(--white-03dp);
   border-radius: 10px;
   opacity: 0;
-  transition: opacity 0.3s ease; /* MovieCard와 동일한 애니메이션 속도 */
+  transition: opacity 0.3s ease;
 `;
 
 const InfoText = styled.div`
@@ -126,7 +127,7 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const fetchedMovies = await fetchMovies();
+        const fetchedMovies = await movieListService.fetchPopularMoviesWithGenres(); // 장르 포함된 영화 데이터
         setMovies(fetchedMovies);
       } catch (error) {
         console.error("Failed to load movies:", error);
@@ -134,7 +135,7 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
     };
 
     loadMovies();
-  }, [fetchMovies]);
+  }, []);
 
   const slide = (direction) => {
     if (carouselRef.current) {
@@ -175,7 +176,7 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
               <InfoText>{movie.title}</InfoText>
               <InfoText>평점: {movie.vote_average}</InfoText>
               <InfoText>개봉일: {movie.release_date}</InfoText>
-              <InfoText>장르: {movie.genre_names?.join(", ")}</InfoText>
+              <InfoText>장르: {movie.genre_names?.join(", ") || "정보 없음"}</InfoText>
             </Overlay>
           </MovieCard>
         ))}
