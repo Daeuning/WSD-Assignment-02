@@ -106,42 +106,40 @@ const ShowVideo = ({ movieId }) => {
         <div
           style={{
             position: "absolute",
-            top: "32%",
+            top: "30%",
             left: "8%",
-            color: "#fff",
+            color: "var(--basic-font)",
             zIndex: "2",
-            maxWidth: "25%",
+            maxWidth: "40%",
           }}
         >
           <h1 style={{ fontSize: "36px", marginBottom: "20px" }}>
             {movieDetails.title}
           </h1>
-          <p style={{ fontSize: "16px", lineHeight: "1.5" }}>
+          <p style={{ fontSize: "16px", lineHeight: "1.5", marginBottom: "20px" }}>
             {movieDetails.overview}
           </p>
+          <button
+            onClick={handlePlay}
+            style={{
+              backgroundColor: "var(--basic-font)",
+              color: "var(--black-font)",
+              fontSize: "18px",
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+            }}
+          >
+            <span style={{ fontSize: "18px" }}>▶</span>
+            재생
+          </button>
         </div>
       )}
-      {!isPlaying ? (
-        <button
-          onClick={handlePlay}
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: "2",
-            backgroundColor: "rgba(255, 255, 255, 0.6)",
-            color: "#000",
-            fontSize: "20px",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          재생
-        </button>
-      ) : (
+      {isPlaying && (
         <iframe
           ref={iframeRef}
           width="100%"
