@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleWishlist } from "../redux/wishlistSlice";
 
 const MovieCardContainer = styled.div`
   flex: 0 0 auto;
@@ -53,10 +55,10 @@ const HeartButton = styled.button`
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(255, 255, 255, 0.2); /* 흰색 반투명 배경 */
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   border-radius: 50%;
-  width: 28px; /* 크기를 작게 조정 */
+  width: 28px;
   height: 28px;
   display: flex;
   justify-content: center;
@@ -77,22 +79,24 @@ const HeartButton = styled.button`
   & > svg {
     width: 16px;
     height: 16px;
-    fill: ${(props) => (props.isLiked ? "var(--primary-color)" : "var(--white-24dp)")}; /* 하트 색상 */
-    stroke-width: 1px; /* 외곽선 두께 */
+    fill: ${(props) => (props.isLiked ? "var(--primary-color)" : "var(--white-24dp)")};
+    stroke-width: 1px;
     transition: fill 0.3s ease, stroke 0.3s ease;
   }
 
   &:hover > svg {
-    fill: ${(props) => (props.isLiked ? "var(--primary-color)" : "rgba(220, 37, 31, 0.3)")}; /* hover 상태에서 분홍색 */
+    fill: ${(props) => (props.isLiked ? "var(--primary-color)" : "rgba(220, 37, 31, 0.3)")};
   }
 `;
 
-
 const MovieCard = ({ movie }) => {
-  const [isLiked, setIsLiked] = useState(false);
+  const wishlist = useSelector((state) => state.wishlist.wishlist);
+  const dispatch = useDispatch();
+
+  const isLiked = wishlist.some((item) => item.id === movie.id);
 
   const toggleLike = () => {
-    setIsLiked((prev) => !prev);
+    dispatch(toggleWishlist(movie));
   };
 
   return (
