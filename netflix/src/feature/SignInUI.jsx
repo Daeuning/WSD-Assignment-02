@@ -259,6 +259,7 @@ const SignInUI = () => {
 
   return (
     <Container>
+      <div style={{ marginTop: "80px" }} />
       <Welcome>
         <FormBox isSignUp={isSignUp}>
           <FormContainer isHidden={!isSignUp}>
