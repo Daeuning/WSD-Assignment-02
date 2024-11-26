@@ -57,6 +57,7 @@ export default class AuthService {
   logout() {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("rememberMe");
     console.log("로그아웃 완료!");
   }
 }
