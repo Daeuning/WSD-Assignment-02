@@ -5,8 +5,8 @@ import MovieCard from "../component/MovieCard.jsx";
 
 const PopularContainer = styled.div`
   padding: 20px;
-  max-width: 82%; /* WishList와 동일한 가로 너비 */
-  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 82%;
+  margin: 0 auto;
 `;
 
 const BannerContainer = styled.div`
@@ -23,7 +23,7 @@ const Banner = styled.div`
   text-align: left;
   color: var(--basic-font);
   padding: 20px;
-  margin-bottom:20px;
+  margin-bottom: 20px;
   margin-top: 10px;
 `;
 
@@ -63,29 +63,62 @@ const GridContainer = styled.div`
 const PaginationControls = styled.div`
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
   margin: 20px 0;
+  color: var(--basic-font);
 
-  button {
-    padding: 10px 20px;
+  .page {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 16px;
-    border: 1px solid var(--primary-color);
-    border-radius: 5px;
-    background-color: var(--white);
+    color: var(--gray-dark);
+    border: none;
+    border-radius: 50%;
     cursor: pointer;
+    background-color: transparent;
+    transition: all 0.3s ease;
 
-    &:disabled {
-      background-color: var(--gray);
+    &.active {
+      background-color: var(--primary-color);
+      color: var(--white);
+    }
+
+    &:hover:not(.active) {
+      background-color: rgba(255, 0, 0, 0.1); /* 반투명 빨간색 */
+    }
+  }
+
+  .arrow {
+    font-size: 24px; /* 아이콘 크기 */
+    color: var(--gray-dark);
+    cursor: pointer;
+    background: none; /* 배경 제거 */
+    border: none; /* 테두리 제거 */
+    padding: 0; /* 패딩 제거 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.disabled {
+      color: var(--gray);
       cursor: not-allowed;
+    }
+
+    &:hover:not(.disabled) {
+      color: var(--primary-color); /* 호버 시 색상 변화 */
     }
   }
 `;
 
 const Popular = () => {
-  const [activeView, setActiveView] = useState("grid"); // grid or list
+  const [activeView, setActiveView] = useState("grid");
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(5); // 5페이지로 제한
 
   useEffect(() => {
     if (activeView === "grid") {
@@ -97,14 +130,31 @@ const Popular = () => {
     try {
       const data = await movieListService.fetchPopularMoviesWithGenres(page);
       setMovies(data);
-      setTotalPages(10); // Assuming total pages is 10 for now; replace with API response if available
     } catch (error) {
       console.error("Error fetching popular movies:", error);
     }
   };
 
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+  const renderPagination = () => {
+    const pages = [];
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <button
+          key={i}
+          className={`page ${i === currentPage ? "active" : ""}`}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pages;
   };
 
   return (
@@ -134,18 +184,22 @@ const Popular = () => {
               <MovieCard key={movie.id} movie={movie} />
             ))}
           </GridContainer>
+          <div style={{ marginTop: "40px" }} />
           <PaginationControls>
             <button
-              disabled={currentPage === 1}
+              className={`arrow ${currentPage === 1 ? "disabled" : ""}`}
               onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
             >
-              이전
+              <span className="material-symbols-outlined">chevron_left</span>
             </button>
+            {renderPagination()}
             <button
-              disabled={currentPage === totalPages}
+              className={`arrow ${currentPage === totalPages ? "disabled" : ""}`}
               onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
             >
-              다음
+              <span className="material-symbols-outlined">chevron_right</span>
             </button>
           </PaginationControls>
         </>
