@@ -177,7 +177,8 @@ function NavBar() {
           )}
         </LoginTab>
       </NavBarContainer>
-      <div style={{ marginTop: "55px" }} /> {/* 네비게이션 바 높이만큼 페이지 콘텐츠 간격 추가 */}
+      {/* 로그인 상태일 때만 렌더링 */}
+      {isLoggedIn && <div style={{ marginTop: "55px" }} />}
     </>
   );
 }
