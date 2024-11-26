@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import GridList from "../feature/GridList.jsx";
+import InfinityList from "../feature/InfinityList.jsx";
 
 const PopularContainer = styled.div`
   padding: 20px;
@@ -77,6 +78,7 @@ const Popular = () => {
       </BannerContainer>
 
       {activeView === "grid" && <GridList />}
+      {activeView === "list" && <InfinityList />}
     </PopularContainer>
   );
 };
