@@ -1,8 +1,9 @@
 {
   "files": {
     "main.css": "/WSD-Assignment-02/static/css/main.bf9688b9.css",
-    "main.js": "/WSD-Assignment-02/static/js/main.5fff0b3a.js",
+    "main.js": "/WSD-Assignment-02/static/js/main.5913351c.js",
     "static/js/453.1c29ee80.chunk.js": "/WSD-Assignment-02/static/js/453.1c29ee80.chunk.js",
+    "static/media/TVRed.png": "/WSD-Assignment-02/static/media/TVRed.c064981c3402e65cec01.png",
     "static/media/movie.jpg": "/WSD-Assignment-02/static/media/movie.d9dab80fe4b0ef73656b.jpg",
     "static/media/NetflixSans-Bold.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Bold.95a94997132161906ea8.woff2",
     "static/media/NetflixSans-Medium.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Medium.7f14db11c6cc61f4dadf.woff2",
@@ -10,11 +11,11 @@
     "static/media/NetflixSans-Regular.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Regular.80119a3c6e4f2ebdfa63.woff2",
     "index.html": "/WSD-Assignment-02/index.html",
     "main.bf9688b9.css.map": "/WSD-Assignment-02/static/css/main.bf9688b9.css.map",
-    "main.5fff0b3a.js.map": "/WSD-Assignment-02/static/js/main.5fff0b3a.js.map",
+    "main.5913351c.js.map": "/WSD-Assignment-02/static/js/main.5913351c.js.map",
     "453.1c29ee80.chunk.js.map": "/WSD-Assignment-02/static/js/453.1c29ee80.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bf9688b9.css",
-    "static/js/main.5fff0b3a.js"
+    "static/js/main.5913351c.js"
   ]
 }
