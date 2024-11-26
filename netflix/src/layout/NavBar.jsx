@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice.js";
 
 const NavBarContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 50px;
-  background-color: rgba(0, 0, 0, 0.01);
-  box-shadow: 0px 7px 29px 0px rgba(220, 37, 31, 0.1);
+  background-color: ${({ isScrolled }) =>
+    isScrolled ? "var(--background-color)" : "rgba(0, 0, 0, 0)"};
+  box-shadow: ${({ isScrolled }) =>
+    isScrolled
+      ? "0px 7px 29px 0px rgba(220, 37, 31, 0.1)"
+      : "none"};
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    background-color: var(--background-color);
+    box-shadow: 0px 7px 29px 0px rgba(220, 37, 31, 0.25);
+  }
 `;
 
 const LeftSection = styled.div`
@@ -86,68 +101,84 @@ const LoginTab = styled.div`
 function NavBar() {
   const dispatch = useDispatch();
   const { isLoggedIn, currentUser } = useSelector((state) => state.auth);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <NavBarContainer>
-      <LeftSection>
-        <Logo>
-          <Link to="/" className="material-symbols-outlined md-primary md-36">
-            movie
-          </Link>
-        </Logo>
-        <Menu>
-          <MenuItem>
-            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              홈
+    <>
+      <NavBarContainer isScrolled={isScrolled}>
+        <LeftSection>
+          <Logo>
+            <Link to="/" className="material-symbols-outlined md-primary md-36">
+              movie
             </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link
-              to="/popular"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              대세 콘텐츠
+          </Logo>
+          <Menu>
+            <MenuItem>
+              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+                홈
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to="/popular"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                대세 콘텐츠
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to="/search"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                찾아보기
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
+                to="/wishlist"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                내가 찜한 리스트
+              </Link>
+            </MenuItem>
+          </Menu>
+        </LeftSection>
+        <LoginTab>
+          {isLoggedIn ? (
+            <>
+              <span>안녕하세요, {currentUser}님</span>
+              <span>|</span>
+              <button onClick={handleLogout}>로그아웃</button>
+            </>
+          ) : (
+            <Link to="/signin">
+              <span className="material-symbols-outlined md-basic-white md-24">
+                account_circle
+              </span>
+              <span>로그인</span>
             </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link
-              to="/search"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              찾아보기
-            </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link
-              to="/wishlist"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              내가 찜한 리스트
-            </Link>
-          </MenuItem>
-        </Menu>
-      </LeftSection>
-      <LoginTab>
-        {isLoggedIn ? (
-          <>
-            <span>안녕하세요, {currentUser}님</span>
-            <span>|</span>
-            <button onClick={handleLogout}>로그아웃</button>
-          </>
-        ) : (
-          <Link to="/signin">
-            <span className="material-symbols-outlined md-basic-white md-24">
-              account_circle
-            </span>
-            <span>로그인</span>
-          </Link>
-        )}
-      </LoginTab>
-    </NavBarContainer>
+          )}
+        </LoginTab>
+      </NavBarContainer>
+      <div style={{ marginTop: "55px" }} /> {/* 네비게이션 바 높이만큼 페이지 콘텐츠 간격 추가 */}
+    </>
   );
 }
 
