@@ -127,15 +127,15 @@ const MovieListCarousel = ({ fetchMovies, title }) => {
   useEffect(() => {
     const loadMovies = async () => {
       try {
-        const fetchedMovies = await movieListService.fetchPopularMoviesWithGenres(); // 장르 포함된 영화 데이터
+        const fetchedMovies = await fetchMovies(); // fetchMovies prop 호출
         setMovies(fetchedMovies);
       } catch (error) {
         console.error("Failed to load movies:", error);
       }
     };
-
+  
     loadMovies();
-  }, []);
+  }, [fetchMovies]); // fetchMovies 의존성 추가
 
   const slide = (direction) => {
     if (carouselRef.current) {
