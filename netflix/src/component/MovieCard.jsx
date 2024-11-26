@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleWishlist } from "../redux/wishlistSlice";
+import movieListService from "../service/movieListService.js";
 
 const MovieCardContainer = styled.div`
   flex: 0 0 auto;
@@ -90,6 +91,7 @@ const HeartButton = styled.button`
 `;
 
 const MovieCard = ({ movie }) => {
+  const [genreNames, setGenreNames] = useState([]);
   const wishlist = useSelector((state) => state.wishlist.wishlist);
   const dispatch = useDispatch();
 
@@ -98,6 +100,20 @@ const MovieCard = ({ movie }) => {
   const toggleLike = () => {
     dispatch(toggleWishlist(movie));
   };
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const genreMapping = await movieListService.fetchGenreMapping();
+        const mappedGenres = movie.genre_ids.map((id) => genreMapping[id] || "Unknown");
+        setGenreNames(mappedGenres);
+      } catch (error) {
+        console.error("Error fetching genres:", error);
+      }
+    };
+
+    fetchGenres();
+  }, [movie.genre_ids]);
 
   return (
     <MovieCardContainer
@@ -114,7 +130,7 @@ const MovieCard = ({ movie }) => {
         <InfoText>{movie.title}</InfoText>
         <InfoText>평점: {movie.vote_average}</InfoText>
         <InfoText>개봉일: {movie.release_date}</InfoText>
-        <InfoText>장르: {movie.genre_names?.join(", ") || "정보 없음"}</InfoText>
+        <InfoText>장르: {genreNames.join(", ") || "정보 없음"}</InfoText>
       </Overlay>
     </MovieCardContainer>
   );
