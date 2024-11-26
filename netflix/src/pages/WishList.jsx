@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import MovieCard from "../component/MovieCard.jsx";
+import TopButton from "../layout/TopButton.jsx"; // TopButton import
 
 const WishListContainer = styled.div`
   padding: 20px;
@@ -34,7 +35,6 @@ const EmptyMessage = styled.div`
 `;
 
 const WishList = () => {
-  // Redux 상태 구독
   const wishlist = useSelector((state) => state.wishlist.wishlist);
 
   return (
@@ -49,6 +49,7 @@ const WishList = () => {
           ))}
         </GridContainer>
       )}
+      <TopButton /> {/* TopButton 컴포넌트 추가 */}
     </WishListContainer>
   );
 };
