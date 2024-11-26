@@ -58,6 +58,7 @@ export default class AuthService {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("rememberMe");
+    localStorage.removeItem("TMDb-Key");
     console.log("로그아웃 완료!");
   }
 }
