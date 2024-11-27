@@ -127,7 +127,7 @@ const movieListService = {
     }
   },
 
-    // 다중 페이지의 인기 영화 목록 가져오기 (장르 포함)
+  // 다중 페이지의 인기 영화 목록 가져오기 (장르 포함)
   fetchPopularMoviesBatchWithGenres: async (startPage = 1, endPage = 3) => {
     try {
       const promises = [];
@@ -136,7 +136,17 @@ const movieListService = {
       }
       const results = await Promise.all(promises);
       const allMovies = results.flat(); // 여러 페이지의 데이터를 병합
-      return await movieListService.mapMoviesWithGenres(allMovies);
+  
+      // 중복 제거: `id` 속성을 기준으로 Set을 사용
+      const movieMap = new Map();
+      allMovies.forEach((movie) => {
+        if (!movieMap.has(movie.id)) {
+          movieMap.set(movie.id, movie);
+        }
+      });
+      const uniqueMovies = Array.from(movieMap.values());
+  
+      return await movieListService.mapMoviesWithGenres(uniqueMovies);
     } catch (error) {
       console.error("Error fetching batch of popular movies with genres:", error);
       throw error;

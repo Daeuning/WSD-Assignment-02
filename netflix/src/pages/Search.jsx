@@ -96,34 +96,72 @@ const LoadingIndicator = styled.div`
 `;
 
 const Search = () => {
-  const [movies, setMovies] = useState([]);
+  const [allMovies, setAllMovies] = useState([]); // 모든 영화 데이터
+  const [filteredMovies, setFilteredMovies] = useState([]); // 필터링된 영화 데이터
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [genre, setGenre] = useState("전체");
-  const [rating, setRating] = useState("전체");
-  const [language, setLanguage] = useState("전체");
+  const [genreMapping, setGenreMapping] = useState({});
   const observerRef = useRef(null);
 
-  // 모든 필터가 '전체'이면 무한 스크롤 가능
-  const isFiltering = genre !== "전체" || rating !== "전체" || language !== "전체";
+  // 장르 매핑 데이터 로드
+  useEffect(() => {
+    const fetchGenreMapping = async () => {
+      try {
+        const mapping = await movieListService.fetchGenreMapping();
+        setGenreMapping(mapping);
+      } catch (error) {
+        console.error("Error fetching genre mapping:", error);
+      }
+    };
+    fetchGenreMapping();
+  }, []);
 
+  // 영화 데이터 가져오기
   const fetchMovies = useCallback(async (page) => {
-    if (isFiltering) return; // 필터링 중일 때는 무한 스크롤 동작 안 함
     setIsLoading(true);
     try {
       const moviesBatch = await movieListService.fetchPopularMoviesWithGenres(page);
-      setMovies((prev) => [...prev, ...moviesBatch]);
+  
+      // 영화 ID를 기준으로 중복 제거
+      setAllMovies((prev) => {
+        const allMoviesMap = new Map(prev.map((movie) => [movie.id, movie]));
+        moviesBatch.forEach((movie) => {
+          allMoviesMap.set(movie.id, movie); // 중복 제거를 위해 Map에 삽입
+        });
+        return Array.from(allMoviesMap.values()); // Map의 값들을 배열로 변환
+      });
     } catch (error) {
       console.error("Error fetching movies:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [isFiltering]);
+  }, []);
 
   useEffect(() => {
-    if (!isFiltering) fetchMovies(currentPage);
-  }, [fetchMovies, currentPage, isFiltering]);
+    fetchMovies(currentPage);
+  }, [fetchMovies, currentPage]);
 
+  // 필터 적용 로직
+  const applyFilters = useCallback(() => {
+    // 선택된 장르의 ID 찾기
+    const genreId = Object.keys(genreMapping).find((id) => genreMapping[id] === genre);
+
+    // 필터링 조건 적용
+    const filtered = allMovies.filter((movie) => {
+      const matchesGenre = genre === "전체" || movie.genre_ids.includes(Number(genreId));
+      return matchesGenre;
+    });
+
+    setFilteredMovies(filtered);
+  }, [allMovies, genre, genreMapping]);
+
+  // 필터 조건이 변경되면 필터링 적용
+  useEffect(() => {
+    applyFilters();
+  }, [applyFilters]);
+
+  // 무한 스크롤 핸들러
   const handleObserver = (entries) => {
     const [entry] = entries;
     if (entry.isIntersecting && !isLoading) {
@@ -137,19 +175,16 @@ const Search = () => {
     return () => observer.disconnect();
   }, [handleObserver]);
 
+  // 필터 변경 핸들러
   const handleFilterChange = (filterType, value) => {
-    setCurrentPage(1); // 페이지를 초기화
-    if (filterType === "genre") setGenre(value);
-    if (filterType === "rating") setRating(value);
-    if (filterType === "language") setLanguage(value);
+    if (filterType === "genre") {
+      setGenre(value); // 장르 업데이트
+    }
   };
 
+  // 필터 초기화
   const handleReset = () => {
-    setMovies([]);
-    setCurrentPage(1);
-    setGenre("전체");
-    setRating("전체");
-    setLanguage("전체");
+    setGenre("전체"); // 장르 초기화
   };
 
   return (
@@ -159,37 +194,23 @@ const Search = () => {
         <FilterGroup>
           <DropdownButton value={genre} onChange={(e) => handleFilterChange("genre", e.target.value)}>
             <option value="전체">장르 (전체)</option>
-            <option value="Action">Action</option>
-            <option value="Adventure">Adventure</option>
-            <option value="Comedy">Comedy</option>
-            <option value="Crime">Crime</option>
-            <option value="Family">Family</option>
-          </DropdownButton>
-          <DropdownButton value={rating} onChange={(e) => handleFilterChange("rating", e.target.value)}>
-            <option value="전체">평점 (전체)</option>
-            <option value="9~10">9~10</option>
-            <option value="8~9">8~9</option>
-            <option value="7~8">7~8</option>
-            <option value="6~7">6~7</option>
-            <option value="5~6">5~6</option>
-            <option value="4~5">4~5</option>
-            <option value="4점 이하">4점 이하</option>
-          </DropdownButton>
-          <DropdownButton value={language} onChange={(e) => handleFilterChange("language", e.target.value)}>
-            <option value="전체">언어 (전체)</option>
-            <option value="en">영어</option>
-            <option value="ko">한국어</option>
+            {Object.entries(genreMapping).map(([id, name]) => (
+              <option key={id} value={name}>
+                {name}
+              </option>
+            ))}
           </DropdownButton>
           <ResetButton onClick={handleReset}>초기화</ResetButton>
         </FilterGroup>
       </BannerContainer>
       <GridContainer>
-        {movies.map((movie) => (
+        {filteredMovies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
-        {!isFiltering && <div ref={observerRef}></div>}
+        {!isLoading && <div ref={observerRef}></div>}
       </GridContainer>
       {isLoading && <LoadingIndicator>Loading...</LoadingIndicator>}
+      {filteredMovies.length === 0 && !isLoading && <p>조건에 맞는 영화가 없습니다.</p>}
     </SearchContainer>
   );
 };
