@@ -159,6 +159,9 @@ function NavBar() {
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
+    setTimeout(() => {
+      window.location.reload(); // 새로고침
+    }, 100);
   };
 
   useEffect(() => {
