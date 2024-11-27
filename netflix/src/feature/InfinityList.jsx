@@ -6,22 +6,23 @@ import TopButton from "../layout/TopButton.jsx";
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(7, 1fr); /* 한 행에 7개의 열 */
   gap: 16px;
-  justify-content: center;
+  justify-content: center; /* 남는 공간을 중앙 정렬 */
   align-content: start;
 
   @media screen and (max-width: 1024px) {
+    grid-template-columns: repeat(5, 1fr); /* 태블릿에서는 한 행에 5개의 열 */
     gap: 12px;
   }
 
   @media screen and (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 모바일에서는 한 행에 3개의 열 */
     gap: 10px;
   }
 
   @media screen and (max-width: 480px) {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 작은 모바일에서는 한 행에 2개의 열 */
     gap: 8px;
   }
 `;
