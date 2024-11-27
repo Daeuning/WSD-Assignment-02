@@ -9,6 +9,7 @@ import Search from "../src/pages/Search.jsx";
 import WishList from "../src/pages/WishList.jsx";
 import NavBar from "../src/layout/NavBar.jsx";
 import { CustomToastContainer } from "../src/utils/toast/customToast.js"; // 커스텀 ToastContainer
+import AuthGuard from "./utils/auth/authGuard.js";
 import "./App.css";
 
 function App() {
@@ -17,16 +18,37 @@ function App() {
       <Provider store={store}>
         <NavBar />
         <Routes>
-          {/* 메인 페이지 */}
+          {/* 메인 페이지 (AuthGuard 제외) */}
           <Route path="/" element={<Main />} />
+          
           {/* 로그인/회원가입 페이지 */}
           <Route path="/signin" element={<SignIn />} />
-          {/* 대세 콘텐츠 페이지 */}
-          <Route path="/popular" element={<Popular />} />
-          {/* 찾아보기 페이지 */}
-          <Route path="/search" element={<Search />} />
-          {/* 내가 찜한 리스트 */}
-          <Route path="/wishlist" element={<WishList />} />
+
+          {/* 보호된 페이지 */}
+          <Route
+            path="/popular"
+            element={
+              <AuthGuard>
+                <Popular />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <AuthGuard>
+                <Search />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/wishlist"
+            element={
+              <AuthGuard>
+                <WishList />
+              </AuthGuard>
+            }
+          />
         </Routes>
         <CustomToastContainer /> {/* 커스텀 ToastContainer 추가 */}
       </Provider>

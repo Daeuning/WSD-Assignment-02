@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../redux/authSlice.js";
 
@@ -100,11 +100,13 @@ const LoginTab = styled.div`
 
 function NavBar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isLoggedIn, currentUser } = useSelector((state) => state.auth);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate("/");
   };
 
   useEffect(() => {
