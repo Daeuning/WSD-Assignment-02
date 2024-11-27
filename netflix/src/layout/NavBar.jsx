@@ -35,6 +35,7 @@ const NavBarContainer = styled.div`
     flex-direction: column;
     align-items: flex-start;
     padding: 10px 20px;
+    gap: 10px;
   }
 `;
 
@@ -62,6 +63,8 @@ const Logo = styled.div`
 
   @media (max-width: 480px) {
     margin-right: 0;
+    width: 100%;
+    text-align: left;
   }
 `;
 
@@ -75,7 +78,7 @@ const Menu = styled.div`
 
   @media (max-width: 480px) {
     flex-wrap: wrap;
-    gap: 5px;
+    gap: 10px;
     width: 100%;
     justify-content: flex-start;
   }
@@ -226,8 +229,7 @@ function NavBar() {
         <LoginTab>
           {isLoggedIn ? (
             <>
-              <span className="user-greeting">안녕하세요, {currentUser}님</span>
-              <span>|</span>
+              <span className="user-greeting">안녕하세요, {currentUser}님&nbsp; | </span>
               <button onClick={handleLogout}>로그아웃</button>
             </>
           ) : (
