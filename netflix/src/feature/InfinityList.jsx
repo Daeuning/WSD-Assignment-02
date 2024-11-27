@@ -10,6 +10,20 @@ const GridContainer = styled.div`
   gap: 16px;
   justify-content: center;
   align-content: start;
+
+  @media screen and (max-width: 1024px) {
+    gap: 12px;
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
 `;
 
 const LoadingIndicator = styled.div`
@@ -17,6 +31,14 @@ const LoadingIndicator = styled.div`
   margin: 20px;
   color: var(--basic-font);
   font-size: 16px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const DropdownButton = styled.select`
@@ -25,6 +47,16 @@ const DropdownButton = styled.select`
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 10px;
+    padding: 6px;
+  }
 `;
 
 const ResetButton = styled.button`
@@ -39,6 +71,16 @@ const ResetButton = styled.button`
 
   &:hover {
     background-color: #d00;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 10px;
+    padding: 6px 12px;
   }
 `;
 
