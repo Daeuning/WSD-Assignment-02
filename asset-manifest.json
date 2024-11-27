@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/WSD-Assignment-02/static/css/main.bf9688b9.css",
-    "main.js": "/WSD-Assignment-02/static/js/main.e16de113.js",
+    "main.js": "/WSD-Assignment-02/static/js/main.64ed2d93.js",
     "static/js/453.1c29ee80.chunk.js": "/WSD-Assignment-02/static/js/453.1c29ee80.chunk.js",
     "static/media/TVRed.png": "/WSD-Assignment-02/static/media/TVRed.c064981c3402e65cec01.png",
     "static/media/movie.jpg": "/WSD-Assignment-02/static/media/movie.d9dab80fe4b0ef73656b.jpg",
@@ -11,11 +11,11 @@
     "static/media/NetflixSans-Regular.woff2": "/WSD-Assignment-02/static/media/NetflixSans-Regular.80119a3c6e4f2ebdfa63.woff2",
     "index.html": "/WSD-Assignment-02/index.html",
     "main.bf9688b9.css.map": "/WSD-Assignment-02/static/css/main.bf9688b9.css.map",
-    "main.e16de113.js.map": "/WSD-Assignment-02/static/js/main.e16de113.js.map",
+    "main.64ed2d93.js.map": "/WSD-Assignment-02/static/js/main.64ed2d93.js.map",
     "453.1c29ee80.chunk.js.map": "/WSD-Assignment-02/static/js/453.1c29ee80.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bf9688b9.css",
-    "static/js/main.e16de113.js"
+    "static/js/main.64ed2d93.js"
   ]
 }
