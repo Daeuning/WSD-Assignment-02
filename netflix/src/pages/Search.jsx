@@ -104,21 +104,25 @@ const Search = () => {
   const [language, setLanguage] = useState("전체");
   const observerRef = useRef(null);
 
+  // 모든 필터가 '전체'이면 무한 스크롤 가능
+  const isFiltering = genre !== "전체" || rating !== "전체" || language !== "전체";
+
   const fetchMovies = useCallback(async (page) => {
+    if (isFiltering) return; // 필터링 중일 때는 무한 스크롤 동작 안 함
     setIsLoading(true);
     try {
-      const moviesBatch = await movieListService.fetchPopularMovies(page);
+      const moviesBatch = await movieListService.fetchPopularMoviesWithGenres(page);
       setMovies((prev) => [...prev, ...moviesBatch]);
     } catch (error) {
       console.error("Error fetching movies:", error);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [isFiltering]);
 
   useEffect(() => {
-    fetchMovies(currentPage);
-  }, [fetchMovies, currentPage]);
+    if (!isFiltering) fetchMovies(currentPage);
+  }, [fetchMovies, currentPage, isFiltering]);
 
   const handleObserver = (entries) => {
     const [entry] = entries;
@@ -133,36 +137,27 @@ const Search = () => {
     return () => observer.disconnect();
   }, [handleObserver]);
 
+  const handleFilterChange = (filterType, value) => {
+    setCurrentPage(1); // 페이지를 초기화
+    if (filterType === "genre") setGenre(value);
+    if (filterType === "rating") setRating(value);
+    if (filterType === "language") setLanguage(value);
+  };
+
   const handleReset = () => {
+    setMovies([]);
+    setCurrentPage(1);
     setGenre("전체");
     setRating("전체");
     setLanguage("전체");
-    setMovies([]);
-    setCurrentPage(1);
   };
-
-  const filteredMovies = movies.filter((movie) => {
-    const genreMatch = genre === "전체" || movie.genre_names.includes(genre);
-    const ratingMatch =
-      rating === "전체" ||
-      (rating === "9~10" && movie.vote_average >= 9) ||
-      (rating === "8~9" && movie.vote_average >= 8 && movie.vote_average < 9) ||
-      (rating === "7~8" && movie.vote_average >= 7 && movie.vote_average < 8) ||
-      (rating === "6~7" && movie.vote_average >= 6 && movie.vote_average < 7) ||
-      (rating === "5~6" && movie.vote_average >= 5 && movie.vote_average < 6) ||
-      (rating === "4~5" && movie.vote_average >= 4 && movie.vote_average < 5) ||
-      (rating === "4점 이하" && movie.vote_average < 4);
-    const languageMatch = language === "전체" || movie.original_language === language;
-
-    return genreMatch && ratingMatch && languageMatch;
-  });
 
   return (
     <SearchContainer>
       <BannerContainer>
         <Banner>찾아보기</Banner>
         <FilterGroup>
-          <DropdownButton value={genre} onChange={(e) => setGenre(e.target.value)}>
+          <DropdownButton value={genre} onChange={(e) => handleFilterChange("genre", e.target.value)}>
             <option value="전체">장르 (전체)</option>
             <option value="Action">Action</option>
             <option value="Adventure">Adventure</option>
@@ -170,7 +165,7 @@ const Search = () => {
             <option value="Crime">Crime</option>
             <option value="Family">Family</option>
           </DropdownButton>
-          <DropdownButton value={rating} onChange={(e) => setRating(e.target.value)}>
+          <DropdownButton value={rating} onChange={(e) => handleFilterChange("rating", e.target.value)}>
             <option value="전체">평점 (전체)</option>
             <option value="9~10">9~10</option>
             <option value="8~9">8~9</option>
@@ -180,7 +175,7 @@ const Search = () => {
             <option value="4~5">4~5</option>
             <option value="4점 이하">4점 이하</option>
           </DropdownButton>
-          <DropdownButton value={language} onChange={(e) => setLanguage(e.target.value)}>
+          <DropdownButton value={language} onChange={(e) => handleFilterChange("language", e.target.value)}>
             <option value="전체">언어 (전체)</option>
             <option value="en">영어</option>
             <option value="ko">한국어</option>
@@ -189,10 +184,10 @@ const Search = () => {
         </FilterGroup>
       </BannerContainer>
       <GridContainer>
-        {filteredMovies.map((movie) => (
+        {movies.map((movie) => (
           <MovieCard key={movie.id} movie={movie} />
         ))}
-        <div ref={observerRef}></div>
+        {!isFiltering && <div ref={observerRef}></div>}
       </GridContainer>
       {isLoading && <LoadingIndicator>Loading...</LoadingIndicator>}
     </SearchContainer>
