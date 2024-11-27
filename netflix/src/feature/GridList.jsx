@@ -5,7 +5,7 @@ import movieListService from "../service/movieListService.js";
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(7, 1fr); /* 한 행에 7개의 열 */
   gap: 16px;
   justify-content: center; /* 남는 공간을 중앙 정렬 */
   align-content: start;
@@ -16,7 +16,6 @@ const PaginationControls = styled.div`
   justify-content: center;
   align-items: center;
   gap: 8px;
-  margin: 20px 0;
   color: var(--basic-font);
 
   .page {
@@ -69,6 +68,7 @@ const GridList = () => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(5); // 5페이지로 제한
+  const itemsPerPage = 14; // 한 페이지에 14개 항목
 
   useEffect(() => {
     fetchMovies(currentPage);
@@ -77,7 +77,7 @@ const GridList = () => {
   const fetchMovies = async (page) => {
     try {
       const data = await movieListService.fetchPopularMoviesWithGenres(page);
-      setMovies(data);
+      setMovies(data.slice(0, itemsPerPage)); // 데이터 제한
     } catch (error) {
       console.error("Error fetching popular movies:", error);
     }
@@ -112,7 +112,7 @@ const GridList = () => {
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </GridContainer>
-      <div style={{ marginTop: "35px" }} />
+      <div style={{ marginTop: "25px" }} />
       <PaginationControls>
         <button
           className={`arrow ${currentPage === 1 ? "disabled" : ""}`}
