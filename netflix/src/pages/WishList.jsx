@@ -8,6 +8,16 @@ const WishListContainer = styled.div`
   padding: 20px;
   max-width: 84%;
   margin: 0 auto;
+
+  @media screen and (max-width: 768px) {
+    padding: 15px;
+    max-width: 90%;
+  }
+
+  @media screen and (max-width: 480px) {
+    padding: 10px;
+    max-width: 95%;
+  }
 `;
 
 const Banner = styled.div`
@@ -18,6 +28,18 @@ const Banner = styled.div`
   padding: 20px;
   margin-bottom: 20px;
   margin-top: 10px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 24px;
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 18px;
+    padding: 5px;
+    margin-bottom: 10px;
+  }
 `;
 
 const GridContainer = styled.div`
@@ -25,6 +47,18 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
   padding: 20px;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 15px;
+  }
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
 `;
 
 const EmptyMessage = styled.div`
@@ -32,6 +66,16 @@ const EmptyMessage = styled.div`
   font-size: 18px;
   color: #777;
   margin-top: 40px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 16px;
+    margin-top: 30px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 14px;
+    margin-top: 20px;
+  }
 `;
 
 const LoadingIndicator = styled.div`
@@ -39,8 +83,15 @@ const LoadingIndicator = styled.div`
   margin: 20px;
   font-size: 16px;
   color: #777;
-`;
 
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 12px;
+  }
+`;
 const WishList = () => {
   const wishlist = useSelector((state) => state.wishlist.wishlist);
   const [visibleMovies, setVisibleMovies] = useState([]);
