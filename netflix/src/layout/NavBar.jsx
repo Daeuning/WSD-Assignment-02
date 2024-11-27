@@ -26,12 +26,29 @@ const NavBarContainer = styled.div`
     background-color: var(--background-color);
     box-shadow: 0px 7px 29px 0px rgba(220, 37, 31, 0.25);
   }
+
+  @media (max-width: 768px) {
+    padding: 10px 30px;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 20px;
+  }
 `;
 
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
 `;
 
 const Logo = styled.div`
@@ -42,11 +59,26 @@ const Logo = styled.div`
     text-decoration: none;
     color: inherit;
   }
+
+  @media (max-width: 480px) {
+    margin-right: 0;
+  }
 `;
 
 const Menu = styled.div`
   display: flex;
   gap: 15px;
+
+  @media (max-width: 768px) {
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+    justify-content: flex-start;
+  }
 `;
 
 const MenuItem = styled.a`
@@ -57,6 +89,15 @@ const MenuItem = styled.a`
 
   &:hover {
     color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin: 5px 0;
   }
 `;
 
@@ -94,6 +135,17 @@ const LoginTab = styled.div`
 
     &:hover {
       color: var(--primary-color);
+    }
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+    span,
+    button {
+      font-size: 12px;
     }
   }
 `;
