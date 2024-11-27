@@ -9,6 +9,21 @@ const GridContainer = styled.div`
   gap: 16px;
   justify-content: center; /* 남는 공간을 중앙 정렬 */
   align-content: start;
+
+  @media screen and (max-width: 1024px) {
+    grid-template-columns: repeat(5, 1fr); /* 태블릿에서는 한 행에 5개의 열 */
+    gap: 12px;
+  }
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); /* 모바일에서는 한 행에 3개의 열 */
+    gap: 10px;
+  }
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr); /* 작은 모바일에서는 한 행에 2개의 열 */
+    gap: 8px;
+  }
 `;
 
 const PaginationControls = styled.div`
@@ -17,6 +32,7 @@ const PaginationControls = styled.div`
   align-items: center;
   gap: 8px;
   color: var(--basic-font);
+  margin-top: 20px;
 
   .page {
     width: 36px;
@@ -40,6 +56,18 @@ const PaginationControls = styled.div`
     &:hover:not(.active) {
       background-color: rgba(255, 0, 0, 0.1); /* 반투명 빨간색 */
     }
+
+    @media screen and (max-width: 768px) {
+      width: 28px;
+      height: 28px;
+      font-size: 14px;
+    }
+
+    @media screen and (max-width: 480px) {
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+    }
   }
 
   .arrow {
@@ -60,6 +88,14 @@ const PaginationControls = styled.div`
 
     &:hover:not(.disabled) {
       color: var(--primary-color); /* 호버 시 색상 변화 */
+    }
+
+    @media screen and (max-width: 768px) {
+      font-size: 20px;
+    }
+
+    @media screen and (max-width: 480px) {
+      font-size: 16px;
     }
   }
 `;
@@ -112,7 +148,6 @@ const GridList = () => {
           <MovieCard key={movie.id} movie={movie} />
         ))}
       </GridContainer>
-      <div style={{ marginTop: "25px" }} />
       <PaginationControls>
         <button
           className={`arrow ${currentPage === 1 ? "disabled" : ""}`}

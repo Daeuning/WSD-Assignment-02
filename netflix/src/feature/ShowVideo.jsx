@@ -24,6 +24,100 @@ const PlayButton = styled.button`
   &:active {
     transform: scale(0.98);
   }
+
+  @media screen and (max-width: 768px) {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+`;
+
+const VideoContainer = styled.div`
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background-size: cover;
+  background-position: center;
+  background-image: ${({ isPlaying, backgroundImage }) =>
+    isPlaying ? "none" : `url(${backgroundImage})`};
+
+  @media screen and (max-width: 768px) {
+    height: 300px;
+  }
+
+  @media screen and (max-width: 480px) {
+    height: 250px;
+  }
+`;
+
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+`;
+
+const InfoContainer = styled.div`
+  position: absolute;
+  top: 30%;
+  left: 8%;
+  color: var(--basic-font);
+  z-index: 2;
+  max-width: 40%;
+
+  h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+
+    @media screen and (max-width: 768px) {
+      font-size: 28px;
+    }
+
+    @media screen and (max-width: 480px) {
+      font-size: 20px;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+
+    @media screen and (max-width: 768px) {
+      font-size: 14px;
+    }
+
+    @media screen and (max-width: 480px) {
+      font-size: 12px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    max-width: 60%;
+    left: 5%;
+    top: 25%;
+  }
+
+  @media screen and (max-width: 480px) {
+    max-width: 70%;
+    left: 5%;
+    top: 20%;
+  }
+`;
+
+const StyledIframe = styled.iframe`
+  width: 100%;
+  height: 500px;
+
+  @media screen and (max-width: 768px) {
+    height: 300px;
+  }
+
+  @media screen and (max-width: 480px) {
+    height: 250px;
+  }
 `;
 
 const ShowVideo = ({ movieId }) => {
@@ -101,66 +195,32 @@ const ShowVideo = ({ movieId }) => {
   if (!videoKey || !backgroundImage || !movieDetails) return <p>Loading...</p>;
 
   return (
-    <div
-      className="video-container"
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "500px",
-        backgroundImage: isPlaying ? "none" : `url(${backgroundImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+    <VideoContainer
+      isPlaying={isPlaying}
+      backgroundImage={backgroundImage}
     >
+      {!isPlaying && <Overlay />}
       {!isPlaying && (
-        <div
-          style={{
-            position: "absolute",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            backgroundColor: "rgba(0, 0, 0, 0.3)",
-            zIndex: "1",
-          }}
-        />
-      )}
-      {!isPlaying && (
-        <div
-          style={{
-            position: "absolute",
-            top: "30%",
-            left: "8%",
-            color: "var(--basic-font)",
-            zIndex: "2",
-            maxWidth: "40%",
-          }}
-        >
-          <h1 style={{ fontSize: "36px", marginBottom: "20px" }}>
-            {movieDetails.title}
-          </h1>
-          <p style={{ fontSize: "16px", lineHeight: "1.5", marginBottom: "20px" }}>
-            {movieDetails.overview}
-          </p>
+        <InfoContainer>
+          <h1>{movieDetails.title}</h1>
+          <p>{movieDetails.overview}</p>
           <PlayButton onClick={handlePlay}>
             <span style={{ fontSize: "18px" }}>▶</span>
             재생
           </PlayButton>
-        </div>
+        </InfoContainer>
       )}
       {isPlaying && (
-        <iframe
+        <StyledIframe
           ref={iframeRef}
-          width="100%"
-          height="500px"
           src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&enablejsapi=1`}
           title="Movie Trailer"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-        ></iframe>
+        ></StyledIframe>
       )}
-    </div>
+    </VideoContainer>
   );
 };
 

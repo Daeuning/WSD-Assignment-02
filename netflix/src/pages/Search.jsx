@@ -8,6 +8,16 @@ const SearchContainer = styled.div`
   padding: 20px;
   max-width: 82%;
   margin: 0 auto;
+
+  @media screen and (max-width: 768px) {
+    padding: 15px;
+    max-width: 90%;
+  }
+
+  @media screen and (max-width: 480px) {
+    padding: 10px;
+    max-width: 95%;
+  }
 `;
 
 const BannerContainer = styled.div`
@@ -15,6 +25,12 @@ const BannerContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 `;
 
 const Banner = styled.div`
@@ -25,11 +41,27 @@ const Banner = styled.div`
   padding: 20px;
   margin-bottom: 20px;
   margin-top: 10px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 24px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 18px;
+    padding: 5px;
+  }
 `;
 
 const FilterGroup = styled.div`
   display: flex;
   gap: 10px;
+
+  @media screen and (max-width: 768px) {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
 `;
 
 const DropdownButton = styled.select`
@@ -61,6 +93,18 @@ const DropdownButton = styled.select`
     font-size: 14px;
     padding: 10px;
   }
+
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+    width: 100px;
+    height: 35px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 10px;
+    width: 90px;
+    height: 30px;
+  }
 `;
 
 const ResetButton = styled.button`
@@ -79,6 +123,18 @@ const ResetButton = styled.button`
     color: rgba(255, 255, 255, 0.8);
     border-color: rgba(220, 37, 31, 0.1);
   }
+
+  @media screen and (max-width: 768px) {
+    font-size: 12px;
+    width: 90px;
+    height: 35px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 10px;
+    width: 80px;
+    height: 30px;
+  }
 `;
 
 const GridContainer = styled.div`
@@ -87,6 +143,16 @@ const GridContainer = styled.div`
   gap: 16px;
   justify-content: center;
   align-content: start;
+
+  @media screen and (max-width: 768px) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+  }
+
+  @media screen and (max-width: 480px) {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
 `;
 
 const LoadingIndicator = styled.div`
@@ -94,6 +160,14 @@ const LoadingIndicator = styled.div`
   margin: 20px;
   color: var(--basic-font);
   font-size: 16px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 const Search = () => {
