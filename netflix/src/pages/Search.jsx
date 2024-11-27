@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
+import movieListService from "../service/movieListService";
+import MovieCard from "../component/MovieCard";
 
 const SearchContainer = styled.div`
   padding: 20px;
@@ -40,7 +42,7 @@ const DropdownButton = styled.select`
   cursor: pointer;
   padding: 5px;
   transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
-  appearance: none; /* 기본 화살표 유지 */
+  appearance: none;
 
   &:hover {
     background-color: rgba(255, 0, 0, 0.1);
@@ -52,24 +54,11 @@ const DropdownButton = styled.select`
     border-color: var(--primary-color);
   }
 
-  /* 드롭다운 리스트 스타일 */
   option {
-    background-color: var(--background-color); /* 리스트 다크 배경 */
-    color: var(--basic-font); /* 리스트 텍스트 색상 */
+    background-color: var(--background-color);
+    color: var(--basic-font);
     font-size: 14px;
     padding: 10px;
-  }
-
-  /* 선택된 옵션 스타일 */
-  option:checked {
-    background-color: var(--primary-color);
-    color: var(--white);
-  }
-
-  /* 호버 상태 */
-  option:hover {
-    background-color: rgba(255, 0, 0, 0.2);
-    color: var(--basic-font);
   }
 `;
 
@@ -91,16 +80,82 @@ const ResetButton = styled.button`
   }
 `;
 
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  justify-content: center;
+  align-content: start;
+`;
+
+const LoadingIndicator = styled.div`
+  text-align: center;
+  margin: 20px;
+  color: var(--basic-font);
+  font-size: 16px;
+`;
+
 const Search = () => {
+  const [movies, setMovies] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
   const [genre, setGenre] = useState("전체");
   const [rating, setRating] = useState("전체");
   const [language, setLanguage] = useState("전체");
+  const observerRef = useRef(null);
+
+  const fetchMovies = useCallback(async (page) => {
+    setIsLoading(true);
+    try {
+      const moviesBatch = await movieListService.fetchPopularMovies(page);
+      setMovies((prev) => [...prev, ...moviesBatch]);
+    } catch (error) {
+      console.error("Error fetching movies:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchMovies(currentPage);
+  }, [fetchMovies, currentPage]);
+
+  const handleObserver = (entries) => {
+    const [entry] = entries;
+    if (entry.isIntersecting && !isLoading) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(handleObserver, { threshold: 1.0 });
+    if (observerRef.current) observer.observe(observerRef.current);
+    return () => observer.disconnect();
+  }, [handleObserver]);
 
   const handleReset = () => {
     setGenre("전체");
     setRating("전체");
     setLanguage("전체");
+    setMovies([]);
+    setCurrentPage(1);
   };
+
+  const filteredMovies = movies.filter((movie) => {
+    const genreMatch = genre === "전체" || movie.genre_names.includes(genre);
+    const ratingMatch =
+      rating === "전체" ||
+      (rating === "9~10" && movie.vote_average >= 9) ||
+      (rating === "8~9" && movie.vote_average >= 8 && movie.vote_average < 9) ||
+      (rating === "7~8" && movie.vote_average >= 7 && movie.vote_average < 8) ||
+      (rating === "6~7" && movie.vote_average >= 6 && movie.vote_average < 7) ||
+      (rating === "5~6" && movie.vote_average >= 5 && movie.vote_average < 6) ||
+      (rating === "4~5" && movie.vote_average >= 4 && movie.vote_average < 5) ||
+      (rating === "4점 이하" && movie.vote_average < 4);
+    const languageMatch = language === "전체" || movie.original_language === language;
+
+    return genreMatch && ratingMatch && languageMatch;
+  });
 
   return (
     <SearchContainer>
@@ -127,12 +182,19 @@ const Search = () => {
           </DropdownButton>
           <DropdownButton value={language} onChange={(e) => setLanguage(e.target.value)}>
             <option value="전체">언어 (전체)</option>
-            <option value="영어">영어</option>
-            <option value="한국어">한국어</option>
+            <option value="en">영어</option>
+            <option value="ko">한국어</option>
           </DropdownButton>
           <ResetButton onClick={handleReset}>초기화</ResetButton>
         </FilterGroup>
       </BannerContainer>
+      <GridContainer>
+        {filteredMovies.map((movie) => (
+          <MovieCard key={movie.id} movie={movie} />
+        ))}
+        <div ref={observerRef}></div>
+      </GridContainer>
+      {isLoading && <LoadingIndicator>Loading...</LoadingIndicator>}
     </SearchContainer>
   );
 };

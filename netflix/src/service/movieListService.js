@@ -126,6 +126,23 @@ const movieListService = {
       throw error;
     }
   },
+
+    // 다중 페이지의 인기 영화 목록 가져오기 (장르 포함)
+  fetchPopularMoviesBatchWithGenres: async (startPage = 1, endPage = 3) => {
+    try {
+      const promises = [];
+      for (let page = startPage; page <= endPage; page++) {
+        promises.push(movieListService.fetchPopularMovies(page));
+      }
+      const results = await Promise.all(promises);
+      const allMovies = results.flat(); // 여러 페이지의 데이터를 병합
+      return await movieListService.mapMoviesWithGenres(allMovies);
+    } catch (error) {
+      console.error("Error fetching batch of popular movies with genres:", error);
+      throw error;
+    }
+  },
+
 };
 
 export default movieListService;
