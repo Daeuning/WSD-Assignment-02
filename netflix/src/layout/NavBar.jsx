@@ -123,6 +123,12 @@ const LoginTab = styled.div`
     font-size: 14px;
     font-weight: 500;
     color: var(--basic-font);
+
+    &.user-greeting {
+      @media (max-width: 480px) {
+        display: none !important; /* 모바일 화면에서는 강제 숨김 */
+      }
+    }
   }
 
   button {
@@ -220,7 +226,7 @@ function NavBar() {
         <LoginTab>
           {isLoggedIn ? (
             <>
-              <span>안녕하세요, {currentUser}님</span>
+              <span className="user-greeting">안녕하세요, {currentUser}님</span>
               <span>|</span>
               <button onClick={handleLogout}>로그아웃</button>
             </>
