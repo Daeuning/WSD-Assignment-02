@@ -14,9 +14,6 @@ export default class AuthService {
       const user = users.find((user) => user.id === email && user.password === password);
 
       if (user) {
-        if (saveToken) {
-          localStorage.setItem('TMDb-Key', user.password);
-        }
         resolve(user); // 로그인 성공
       } else {
         reject('로그인에 실패하였습니다'); // 로그인 실패
@@ -58,7 +55,6 @@ export default class AuthService {
     localStorage.removeItem("currentUser");
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("rememberMe");
-    localStorage.removeItem("TMDb-Key");
     console.log("로그아웃 완료!");
   }
 }

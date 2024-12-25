@@ -21,7 +21,6 @@ const authSlice = createSlice({
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("currentUser");
       localStorage.removeItem("rememberMe");
-      localStorage.removeItem("TMDb-Key");
     },
   },
 });
