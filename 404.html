@@ -4,17 +4,17 @@
     <meta charset="utf-8" />
     <title>Page Not Found</title>
     <script>
-      // 현재 URL의 경로와 쿼리 문자열 가져오기
-      var currentPath = window.location.pathname + window.location.search;
-      
+      // 현재 URL 경로와 쿼리 문자열 가져오기
+      var currentUrl = window.location.pathname + window.location.search;
+
       // 애플리케이션의 basename(`/WSD-Assignment-02`) 제거
-      var redirect = currentPath.replace('/WSD-Assignment-02', '');
-      
+      var redirectUrl = currentUrl.replace('/WSD-Assignment-02', '');
+
       // 경로를 안전하게 인코딩
-      redirect = encodeURIComponent(redirect);
-      
+      redirectUrl = encodeURIComponent(redirectUrl);
+
       // index.html로 리다이렉트하며 SPA 경로 유지
-      window.location.href = "/WSD-Assignment-02/index.html?redirect=" + redirect;
+      window.location.href = "/WSD-Assignment-02/index.html?redirect=" + redirectUrl;
     </script>
   </head>
   <body>
