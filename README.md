@@ -166,7 +166,7 @@ REACT_APP_KAKAO_REDIRECT_URI=https://daeuning.github.io/WSD-Assignment-02/kakao-
 npm install
 ```
 
-### 4. 개발 서버 실행
+### 5. 개발 서버 실행
 ```
 npm run start:dev
 ```
