@@ -20,7 +20,7 @@ const authSlice = createSlice({
       state.currentUser = null;
       localStorage.removeItem("isLoggedIn");
       localStorage.removeItem("currentUser");
-      localStorage.removeItem("rememberMe");
+      localStorage.removeItem("kakao_access_token");
     },
   },
 });

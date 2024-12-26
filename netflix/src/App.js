@@ -10,6 +10,7 @@ import WishList from "../src/pages/WishList.jsx";
 import NavBar from "../src/layout/NavBar.jsx";
 import { CustomToastContainer } from "../src/utils/toast/customToast.js"; // 커스텀 ToastContainer
 import AuthGuard from "./utils/auth/authGuard.js";
+import KakaoLoginSuccess from "../src/pages/KakaoLoginSuccess";
 import "./App.css";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
               </AuthGuard>
             }
           />
+          <Route path="/kakao-login-success" element={<KakaoLoginSuccess />} />
         </Routes>
         <CustomToastContainer /> {/* 커스텀 ToastContainer 추가 */}
       </Provider>
