@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/authSlice";
@@ -18,11 +18,12 @@ const requestToken = async (code) => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch token");
+    const errorData = await response.json();
+    console.error("Token Request Error:", errorData);
+    throw new Error(`Failed to fetch token: ${errorData.error_description}`);
   }
 
   const data = await response.json();
-  // Access Token을 localStorage에 저장
   localStorage.setItem("kakao_access_token", data.access_token);
   return data.access_token;
 };
@@ -39,64 +40,57 @@ const getUserInfo = async (token) => {
     throw new Error("Failed to fetch user info");
   }
 
-  const data = await response.json();
-  return data;
+  return await response.json();
 };
 
 const KakaoLoginSuccess = () => {
   const [userInfo, setUserInfo] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const fetchAccessTokenAndUserInfo = useCallback(async () => {
+    if (isProcessing || localStorage.getItem("kakao_access_token")) return;
+
+    setIsProcessing(true);
+
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+
+    if (!code) {
+      console.error("Authorization code not found");
+      return;
+    }
+
+    try {
+      const accessToken = await requestToken(code);
+      const userInfo = await getUserInfo(accessToken);
+
+      setUserInfo(userInfo);
+      dispatch(login(userInfo.properties.nickname));
+
+      // URL에서 인증 코드 제거
+      window.history.replaceState(null, "", window.location.pathname);
+      navigate("/");
+    } catch (error) {
+      console.error("Login process failed:", error);
+      localStorage.removeItem("kakao_access_token");
+      navigate("/");
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [isProcessing, dispatch, navigate]);
+
   useEffect(() => {
-    const fetchAccessTokenAndUserInfo = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
-
-      if (!code) {
-        alert("카카오 로그인 실패");
-        navigate("/");
-        return;
-      }
-
-      try {
-        // Access Token 요청
-        const accessToken = await requestToken(code);
-
-        // 사용자 정보 요청
-        const userInfo = await getUserInfo(accessToken);
-        console.log("User Info Response:", userInfo);
-
-        setUserInfo(userInfo);
-        dispatch(login(userInfo.properties.nickname)); // Redux 상태 업데이트
-
-        // URL에서 code 제거
-        const newParams = new URLSearchParams(window.location.search);
-        newParams.delete("code");
-        window.history.replaceState({}, "", `${window.location.pathname}?${newParams}`);
-      } catch (error) {
-        console.error("카카오 로그인 오류:", error);
-        alert("카카오 로그인 중 오류가 발생했습니다.");
-        navigate("/");
-      }
-    };
-
     fetchAccessTokenAndUserInfo();
-  }, [navigate, dispatch]);
+  }, [fetchAccessTokenAndUserInfo]);
 
   return (
     <div>
       {userInfo ? (
         <div>
           <h2>로그인 성공!</h2>
-          {userInfo.properties ? (
-            <>
-              <p>닉네임: {userInfo.properties.nickname}</p>
-              <img src={userInfo.properties.profile_image} alt="프로필 이미지" />
-            </>
-          ) : (
-            <p>사용자 정보가 없습니다.</p>
-          )}
+          <p>닉네임: {userInfo.properties.nickname}</p>
         </div>
       ) : (
         <p>카카오 로그인 진행 중...</p>

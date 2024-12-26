@@ -1,5 +1,4 @@
 // authService.js
-
 export default class AuthService {
   /**
    * 로그인 시도
@@ -45,16 +44,5 @@ export default class AuthService {
         reject(err.message); // 회원가입 실패
       }
     });
-  }
-
-  /**
-   * 로그아웃
-   * TMDB API 키와 관련 데이터를 Local Storage에서 제거
-   */
-  logout() {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("rememberMe");
-    console.log("로그아웃 완료!");
   }
 }

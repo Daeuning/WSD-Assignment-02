@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "../src/redux/store.js";
+import store from "../src/redux/store.js";
 import Main from "../src/pages/Main.jsx";
 import SignIn from "../src/pages/SignIn.jsx";
 import Popular from "../src/pages/Popular.jsx";
