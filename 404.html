@@ -9,10 +9,10 @@
         const currentPath = window.location.pathname;
         const search = window.location.search;
 
-        // 이미 WSD-Assignment-02 경로로 리디렉션된 경우 추가 리디렉션 방지
-        if (!currentPath.startsWith("/WSD-Assignment-02")) {
-          // 올바른 기본 경로로 리디렉션
-          window.location.href = "/WSD-Assignment-02" + currentPath + search;
+        // 올바른 경로를 가진 요청은 다시 리디렉션하지 않음
+        if (currentPath.startsWith("/WSD-Assignment-02")) {
+          // React Router로 넘겨주기 위해 index.html로 리디렉션
+          window.location.href = "/WSD-Assignment-02/index.html" + search;
         }
       })();
     </script>
