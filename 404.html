@@ -4,11 +4,10 @@
     <meta charset="utf-8" />
     <title>Page Not Found</title>
     <script>
-      // GitHub Pages에서 React Router의 SPA 라우팅 문제를 해결하는 스크립트
-      // 현재 경로에서 React 앱의 베이스 경로를 제거
+      // 현재 URL에서 애플리케이션의 basename(`/WSD-Assignment-02`)을 제거
       var redirect = window.location.pathname.replace('/WSD-Assignment-02', '');
-      // 올바른 경로로 리다이렉트
-      window.location.href = "/WSD-Assignment-02" + redirect;
+      // index.html로 리다이렉트하며 SPA 경로 유지
+      window.location.href = "/WSD-Assignment-02/index.html?redirect=" + redirect;
     </script>
   </head>
   <body>
