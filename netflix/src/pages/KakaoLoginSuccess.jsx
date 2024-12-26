@@ -17,6 +17,9 @@ const requestToken = async (code) => {
     }),
   });
 
+  console.log("Response Status:", response.status); // 추가
+  console.log("Response Data:", await response.text()); // 추가
+
   if (!response.ok) {
     const errorData = await response.json();
     console.error("Token Request Error:", errorData);
