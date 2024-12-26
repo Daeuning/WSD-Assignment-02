@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "CI=false react-scripts build",
+    "build": "cross-env CI=false react-scripts build",
     "start:dev": "env-cmd -f .env.development react-scripts start",
     "start:prod": "env-cmd -f .env.production react-scripts start",
     "build:prod": "env-cmd -f .env.production react-scripts build",
