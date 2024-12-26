@@ -54,7 +54,7 @@ const KakaoLoginSuccess = () => {
     if (isProcessing || localStorage.getItem("kakao_access_token")) return;
 
     setIsProcessing(true);
-    setErrorMessage(null); // 이전 에러 메시지 초기화
+    setErrorMessage(null); 
 
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
