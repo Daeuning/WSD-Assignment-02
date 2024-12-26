@@ -1,5 +1,4 @@
 // authService.js
-
 export default class AuthService {
   /**
    * 로그인 시도
@@ -14,9 +13,6 @@ export default class AuthService {
       const user = users.find((user) => user.id === email && user.password === password);
 
       if (user) {
-        if (saveToken) {
-          localStorage.setItem('TMDb-Key', user.password);
-        }
         resolve(user); // 로그인 성공
       } else {
         reject('로그인에 실패하였습니다'); // 로그인 실패
@@ -48,17 +44,5 @@ export default class AuthService {
         reject(err.message); // 회원가입 실패
       }
     });
-  }
-
-  /**
-   * 로그아웃
-   * TMDB API 키와 관련 데이터를 Local Storage에서 제거
-   */
-  logout() {
-    localStorage.removeItem("currentUser");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("rememberMe");
-    localStorage.removeItem("TMDb-Key");
-    console.log("로그아웃 완료!");
   }
 }

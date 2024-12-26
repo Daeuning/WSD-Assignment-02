@@ -3,7 +3,7 @@ import { tbdb } from "../config.js"; // TMDB API URL 가져오기
 
 const videoListService = {
   getApiKey: () => {
-    const apiKey = localStorage.getItem("TMDb-Key");
+    const apiKey = process.env.REACT_APP_TMDB_API_KEY;
     if (!apiKey) {
       throw new Error("API Key is missing. Please log in.");
     }
