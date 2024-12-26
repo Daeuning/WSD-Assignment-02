@@ -37,7 +37,7 @@ jobs:
 
       - name: Build project
         working-directory: ./netflix
-        run: npm run build # 빌드 명령어 (React, Vue, Angular 등 프로젝트에 따라 변경)
+        run: npm run build:prod # 빌드 명령어 (React, Vue, Angular 등 프로젝트에 따라 변경)
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
