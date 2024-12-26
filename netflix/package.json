@@ -26,7 +26,8 @@
     "start:dev": "env-cmd -f .env.development react-scripts start",
     "build:prod": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "clean": "rimraf build/"
   },
   "eslintConfig": {
     "extends": [
