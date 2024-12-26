@@ -6,15 +6,13 @@
     <title>Redirecting...</title>
     <script>
       (function () {
-        const pathname = window.location.pathname;
+        const currentPath = window.location.pathname;
         const search = window.location.search;
 
-        // 카카오 인증 경로는 쿼리 파라미터 유지
-        if (pathname.includes("/kakao-login-success")) {
-          window.location.href = `/WSD-Assignment-02${pathname}${search}`;
-        } else {
-          // 나머지 경로는 index.html로 리디렉션
-          window.location.href = "/WSD-Assignment-02/";
+        // 이미 WSD-Assignment-02 경로로 리디렉션된 경우 추가 리디렉션 방지
+        if (!currentPath.startsWith("/WSD-Assignment-02")) {
+          // 올바른 기본 경로로 리디렉션
+          window.location.href = "/WSD-Assignment-02" + currentPath + search;
         }
       })();
     </script>
