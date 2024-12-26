@@ -143,20 +143,33 @@ git clone https://github.com/Daeuning/WSD-Assignment-02.git
 cd netflix
 ```
 
-### 3. 의존성 설치
+### 3. .env 파일 추가
+```
+// .env.development
+REACT_APP_IP_ADDRESS=localhost
+REACT_APP_PORT=3000
+REACT_APP_TMDB_API_KEY= example
+REACT_APP_KAKAO_REST_API_KEY= example
+REACT_APP_KAKAO_REDIRECT_URI=http://localhost:3000/WSD-Assignment-02/kakao-login-success
+```
+```
+// .env.production
+REACT_APP_IP_ADDRESS=https://daeuning.github.io/WSD-Assignment-02
+REACT_APP_PORT=443
+REACT_APP_TMDB_API_KEY= example
+REACT_APP_KAKAO_REST_API_KEY= example
+REACT_APP_KAKAO_REDIRECT_URI=https://daeuning.github.io/WSD-Assignment-02/kakao-login-success
+```
+
+### 4. 의존성 설치
 ```
 npm install
 ```
-
-- yarn을 사용한다면, `yarn install`
 
 ### 4. 개발 서버 실행
 ```
 npm run start:dev
 ```
-
-- yarn을 사용한다면, `yarn start`
-
 
 위 명령어를 실행하면 기본적으로 http://localhost:3000에서 개발 서버가 실행됩니다
 
