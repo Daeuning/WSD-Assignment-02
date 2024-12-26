@@ -4,7 +4,7 @@ import { tbdb } from "../config"; // config 파일에서 API URL 가져오기
 const movieListService = {
   // LocalStorage에서 API 키 가져오기
   getApiKey: () => {
-    const apiKey = localStorage.getItem("TMDb-Key");
+    const apiKey = process.env.REACT_APP_TMDB_API_KEY;
     if (!apiKey) {
       throw new Error("API Key is missing. Please log in.");
     }

@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 // Higher Order Component for Protected Routes
 const AuthGuard = ({ children }) => {
   // Check if the user is authenticated
-  const isAuthenticated = localStorage.getItem("TMDb-Key") !== null;
+  const isAuthenticated = localStorage.getItem("isLoggedIn") === "true";
 
   // If not authenticated, redirect to /signin
   if (!isAuthenticated) {

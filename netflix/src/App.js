@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "../src/redux/store.js";
+import store from "../src/redux/store.js";
 import Main from "../src/pages/Main.jsx";
 import SignIn from "../src/pages/SignIn.jsx";
 import Popular from "../src/pages/Popular.jsx";
@@ -10,6 +10,7 @@ import WishList from "../src/pages/WishList.jsx";
 import NavBar from "../src/layout/NavBar.jsx";
 import { CustomToastContainer } from "../src/utils/toast/customToast.js"; // 커스텀 ToastContainer
 import AuthGuard from "./utils/auth/authGuard.js";
+import KakaoLoginSuccess from "../src/pages/KakaoLoginSuccess";
 import "./App.css";
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
               </AuthGuard>
             }
           />
+          <Route path="/kakao-login-success" element={<KakaoLoginSuccess />} />
         </Routes>
         <CustomToastContainer /> {/* 커스텀 ToastContainer 추가 */}
       </Provider>

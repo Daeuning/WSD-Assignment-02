@@ -203,6 +203,26 @@ const CheckboxContainer = styled.div`
   }
 `;
 
+const KakaoButton = styled(Button)`
+  margin-top: 20px;
+  background-color: #fee500; /* 카카오 노란색 */
+  color: #3c1e1e; /* 카카오 로고와 동일한 색상 */
+  font-size: 0.9em;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #fdda00;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: #e4bf00;
+    transform: scale(0.98);
+  }
+`;
+
+const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REDIRECT_URI}&response_type=code`;
+
 const SignInUI = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -211,7 +231,11 @@ const SignInUI = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isAgreed, setIsAgreed] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false); // Remember me 상태 추가
+  const [rememberMe, setRememberMe] = useState(false);
+
+  const handleKakaoLogin = () => {
+    window.location.href = KAKAO_AUTH_URL; // 카카오 인증 서버로 리다이렉트
+  };
 
   const clearFields = () => {
     setEmail("");
@@ -242,7 +266,6 @@ const SignInUI = () => {
       await handleLogin(email, password); // 서버에서 로그인 성공 여부 확인
       dispatch(login(email)); // Redux 상태 업데이트
 
-      // Remember me 체크 여부에 따라 localStorage에 저장 유지
       if (rememberMe) {
         localStorage.setItem("rememberMe", "true");
       } else {
@@ -321,6 +344,7 @@ const SignInUI = () => {
               </CheckboxContainer>
               <Button type="submit">login</Button>
             </form>
+            <KakaoButton onClick={handleKakaoLogin}>카카오로 로그인</KakaoButton>
           </FormContainer>
         </FormBox>
         <LeftBox isSignUp={isSignUp}>
