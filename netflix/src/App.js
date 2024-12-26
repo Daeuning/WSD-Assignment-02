@@ -22,7 +22,7 @@ function App() {
           {/* 메인 페이지 (AuthGuard 제외) */}
           <Route path="/" element={<Main />} />
           
-          {/* 로그인/회원가입 페이지 */}
+          {/* 로그인/회원가입 */}
           <Route path="/signin" element={<SignIn />} />
 
           {/* 보호된 페이지 */}
