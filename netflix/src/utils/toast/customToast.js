@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
  * Toast 메시지 생성 함수
  * @param {string} type - Toast 타입 ("success", "error", "info", "warning")
  * @param {string} message - 표시할 메시지
- * @param {object} options - 추가 옵션 (선택 사항)
+ * @param {object} options - 추가 옵션 (선택 사
  */
 export const showToast = (type, message, options = {}) => {
   const baseOptions = {
