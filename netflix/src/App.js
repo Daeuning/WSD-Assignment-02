@@ -17,7 +17,7 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // URL의 쿼리스트링에서 redirect 값을 확인
+    // URL의 쿼리스트링에서 redirect 값을 확
     const params = new URLSearchParams(window.location.search);
     const redirectPath = params.get("redirect");
 
