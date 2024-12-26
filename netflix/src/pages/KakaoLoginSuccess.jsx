@@ -110,8 +110,16 @@ const KakaoLoginSuccess = () => {
   }, [isProcessing, dispatch, navigate]);
 
   useEffect(() => {
-    fetchAccessTokenAndUserInfo();
-  }, [fetchAccessTokenAndUserInfo]);
+    // Query String에서 redirect 값을 확인하고 처리
+    const params = new URLSearchParams(window.location.search);
+    const redirectPath = params.get("redirect");
+    if (redirectPath) {
+      console.log("Redirecting to:", redirectPath);
+      navigate(redirectPath);
+    } else {
+      fetchAccessTokenAndUserInfo();
+    }
+  }, [fetchAccessTokenAndUserInfo, navigate]);
 
   return (
     <div>
