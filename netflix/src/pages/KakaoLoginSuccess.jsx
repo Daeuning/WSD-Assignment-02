@@ -52,48 +52,41 @@ const KakaoLoginSuccess = () => {
   const dispatch = useDispatch();
 
   const fetchAccessTokenAndUserInfo = useCallback(async () => {
-    if (isProcessing || localStorage.getItem("kakao_access_token")) return;
-
+    // 로컬 스토리지 초기화
+    localStorage.removeItem("kakao_access_token");
+    
+    if (isProcessing) return;
+  
     setIsProcessing(true);
-    setErrorMessage(null); 
-
+    setErrorMessage(null);
+  
     const params = new URLSearchParams(window.location.search);
     const code = params.get("code");
-
+  
     if (!code) {
       console.error("Authorization code not found");
       setErrorMessage("카카오 인증 코드가 유효하지 않습니다. 다시 시도해주세요.");
+      setIsProcessing(false);
       return;
     }
-
+  
     try {
-      const accessToken = await requestToken(code);
-      const userInfo = await getUserInfo(accessToken);
-
+      const accessToken = await requestToken(code); // 새로운 토큰 요청
+      const userInfo = await getUserInfo(accessToken); // 사용자 정보 요청
+  
       setUserInfo(userInfo);
-
-      // 파싱된 사용자 정보 출력
-      const parsedUserInfo = {
-        id: userInfo.id,
-        connectedAt: userInfo.connected_at,
-        nickname: userInfo.properties?.nickname || "N/A",
-        profileImage: userInfo.properties?.profile_image || "N/A",
-      };
-
-      console.log("사용자 정보 (파싱됨):", parsedUserInfo);
-      console.log("사용자 정보 (문자열):", JSON.stringify(parsedUserInfo, null, 2));
-
+  
+      // 사용자 정보 Redux 저장
       dispatch(login(userInfo.properties.nickname));
-
+  
       // URL에서 인증 코드 제거
       window.history.replaceState(null, "", window.location.pathname);
-
-      // 로그인 성공 시 메인 페이지로 이동
+  
+      // 메인 페이지로 이동
       navigate("/");
     } catch (error) {
       console.error("Login process failed:", error);
-
-      // 에러 유형에 따라 메시지 처리
+  
       if (error.message.includes("Failed to fetch token")) {
         setErrorMessage("카카오 액세스 토큰 발급에 실패했습니다. 다시 시도해주세요.");
       } else if (error.message.includes("Failed to fetch user info")) {
@@ -101,15 +94,15 @@ const KakaoLoginSuccess = () => {
       } else {
         setErrorMessage("로그인 중 문제가 발생했습니다. 다시 시도해주세요.");
       }
-
-      // 로컬 저장소 초기화 및 홈으로 이동
+  
+      // 로컬 저장소 초기화
       localStorage.removeItem("kakao_access_token");
-      navigate("/");
+      navigate("/signin");
     } finally {
       setIsProcessing(false);
     }
   }, [isProcessing, dispatch, navigate]);
-
+  
   useEffect(() => {
     // Query String에서 redirect 값을 확인하고 처리
     const params = new URLSearchParams(window.location.search);
