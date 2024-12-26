@@ -17,17 +17,15 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // URL의 쿼리스트링에서 redirect 값을 확
     const params = new URLSearchParams(window.location.search);
     const redirectPath = params.get("redirect");
-
+  
     if (redirectPath) {
-      // redirect 값이 존재하면 해당 경로로 이동
-      navigate(redirectPath);
-      // URL에서 redirect 파라미터 제거
-      window.history.replaceState(null, "", window.location.pathname);
+      const decodedPath = decodeURIComponent(redirectPath); // 디코딩된 경로 사용
+      navigate(decodedPath, { replace: true }); // 히스토리 수정
     }
   }, [navigate]);
+  
   return (
     <>
       <Provider store={store}>
